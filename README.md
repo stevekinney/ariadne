@@ -61,7 +61,7 @@ pnpm add ariadne
 ### Basic Usage
 
 ```typescript
-import { extractSemanticMap } from 'ariadne';
+import { extractSemanticMap } from 'threadline';
 
 // Extract semantic map from current document
 const semanticMap = await extractSemanticMap(document);
@@ -72,9 +72,9 @@ console.log(`Found ${semanticMap.elements.length} semantic elements`);
 ### Advanced Usage
 
 ```typescript
-import { Ariadne } from 'ariadne';
+import { Threadline } from 'threadline';
 
-const client = new Ariadne({
+const client = new Threadline({
   tokenBudget: 4000, // Maximum output tokens
   includeChildren: true, // Include parent-child relationships
   debug: false, // Enable debug logging
@@ -96,7 +96,7 @@ if (map.elements) {
 Mark elements in the DOM as they are processed:
 
 ```typescript
-const client = new Ariadne({
+const client = new Threadline({
   // Mark elements with data attributes
   markElements: true,
   elementAttribute: 'data-ariadne-id',
@@ -367,9 +367,9 @@ Abort the current extraction operation without terminating the worker. The clien
 **Example:**
 
 ```typescript
-import { Ariadne } from 'ariadne';
+import { Threadline } from 'threadline';
 
-const client = new Ariadne({ tokenBudget: 5000 });
+const client = new Threadline({ tokenBudget: 5000 });
 
 try {
   const map1 = await client.extract(document);
@@ -780,12 +780,12 @@ _\*Performance varies significantly based on page complexity, content size, and 
 The `tokenBudget` option controls the maximum size of the output to prevent overwhelming LLMs:
 
 ```typescript
-const client = new Ariadne({
+const client = new Threadline({
   tokenBudget: 2000, // Smaller budget for lightweight models
 });
 
 // For larger models
-const client = new Ariadne({
+const client = new Threadline({
   tokenBudget: 8000, // More comprehensive extraction
 });
 ```
@@ -802,12 +802,12 @@ Control whether to include hierarchical relationships:
 
 ```typescript
 // Include parent-child relationships (default)
-const client = new Ariadne({
+const client = new Threadline({
   includeChildren: true, // Adds "children" arrays to parent elements
 });
 
 // Flat structure for simpler processing
-const client = new Ariadne({
+const client = new Threadline({
   includeChildren: false, // Only parentId references
 });
 ```
@@ -817,7 +817,7 @@ const client = new Ariadne({
 Enable detailed logging for development:
 
 ```typescript
-const client = new Ariadne({
+const client = new Threadline({
   debug: true, // Enables console logging in development
 });
 ```
@@ -828,7 +828,7 @@ const client = new Ariadne({
 
 ```typescript
 // Content script
-import { extractSemanticMap } from 'ariadne';
+import { extractSemanticMap } from 'threadline';
 
 // Extract from current page
 const semanticMap = await extractSemanticMap(document, {
@@ -847,9 +847,9 @@ chrome.runtime.sendMessage({
 
 ```typescript
 // Generate stable selectors for testing
-import { Ariadne } from 'ariadne';
+import { Threadline } from 'threadline';
 
-const client = new Ariadne();
+const client = new Threadline();
 const map = await client.extract(document);
 
 // Find elements by role and label
@@ -987,7 +987,7 @@ if (map.partial) {
 ### 1. **Always Clean Up Workers**
 
 ```typescript
-const client = new Ariadne();
+const client = new Threadline();
 try {
   const map = await client.extract(document);
   // Process map
@@ -1030,7 +1030,7 @@ try {
 ### 3. **Optimize for Your Use Case**
 
 ```typescript
-import { extractSemanticMap } from 'ariadne';
+import { extractSemanticMap } from 'threadline';
 
 // For LLM automation (comprehensive)
 const automationMap = await extractSemanticMap(document, {
@@ -1194,7 +1194,7 @@ Ariadne extracts semantic structure, not sensitive content:
 
 ```typescript
 // Always clean up workers to prevent memory leaks
-const client = new Ariadne();
+const client = new Threadline();
 try {
   const map = await client.extract(document);
 } finally {
@@ -1344,7 +1344,7 @@ forms.forEach((form) => {
 **After (with Ariadne):**
 
 ```typescript
-import { extractSemanticMap } from 'ariadne';
+import { extractSemanticMap } from 'threadline';
 
 const map = await extractSemanticMap(document);
 
@@ -1380,7 +1380,7 @@ const formData = await page.evaluate(() => {
 
 ```javascript
 // In browser context (injected script)
-import { extractSemanticMap } from 'ariadne';
+import { extractSemanticMap } from 'threadline';
 
 const map = await extractSemanticMap(document, {
   tokenBudget: 4000,

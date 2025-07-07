@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'bun:test';
 import './test-setup.js'; // Import DOM setup before other imports
-import { Ariadne, extractSemanticMap } from './index.js';
-import type { AriadneConfiguration } from './types/ariadne.js';
+import { Threadline, extractSemanticMap } from './index.js';
+import type { ThreadlineConfiguration } from './types/threadline.js';
 import { HashIdGenerator } from './worker/hash-id-generator.js';
 
-describe('New Ariadne Features', () => {
+describe('New Threadline Features', () => {
   describe('Hash ID Generator', () => {
     it('should generate shorter IDs than UUIDs', () => {
       const generator = new HashIdGenerator();
@@ -37,7 +37,7 @@ describe('New Ariadne Features', () => {
 
       const processedElements: Array<{ element: Element; id: string }> = [];
       
-      const config: AriadneConfiguration = {
+      const config: ThreadlineConfiguration = {
         onElementProcess: (element: Element, id: string) => {
           processedElements.push({ element, id });
         },
@@ -46,7 +46,7 @@ describe('New Ariadne Features', () => {
       // Create a test document
       const doc = createTestDocument();
       
-      const client = new Ariadne(config);
+      const client = new Threadline(config);
       try {
         await client.extract(doc);
         
@@ -66,13 +66,13 @@ describe('New Ariadne Features', () => {
     it('should mark elements when markElements is true', async () => {
       if (typeof Worker === 'undefined') return;
 
-      const config: AriadneConfiguration = {
+      const config: ThreadlineConfiguration = {
         markElements: true,
         elementAttribute: 'data-test-id',
       };
 
       const doc = createTestDocument();
-      const client = new Ariadne(config);
+      const client = new Threadline(config);
       
       try {
         await client.extract(doc);
@@ -96,7 +96,7 @@ describe('New Ariadne Features', () => {
     it('should return elements as object when elementsAsObject is true', async () => {
       if (typeof Worker === 'undefined') return;
 
-      const config: AriadneConfiguration = {
+      const config: ThreadlineConfiguration = {
         elementsAsObject: true,
       };
 
@@ -121,7 +121,7 @@ describe('New Ariadne Features', () => {
     it('should include elementIds array when includeElementIds is true', async () => {
       if (typeof Worker === 'undefined') return;
 
-      const config: AriadneConfiguration = {
+      const config: ThreadlineConfiguration = {
         includeElementIds: true,
       };
 
@@ -141,7 +141,7 @@ describe('New Ariadne Features', () => {
     it('should use compact mode correctly', async () => {
       if (typeof Worker === 'undefined') return;
 
-      const config: AriadneConfiguration = {
+      const config: ThreadlineConfiguration = {
         compact: true,
       };
 
@@ -157,7 +157,7 @@ describe('New Ariadne Features', () => {
     it('should respect explicit settings over compact defaults', async () => {
       if (typeof Worker === 'undefined') return;
 
-      const config: AriadneConfiguration = {
+      const config: ThreadlineConfiguration = {
         compact: true,
         elementsAsObject: true, // Override compact default
         includeElementIds: true, // Override compact default

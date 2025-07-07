@@ -1,11 +1,11 @@
 /**
- * AriadneSelectorGenerator - Creates stable CSS selectors for Ariadne elements
+ * ThreadlineSelectorGenerator - Creates stable CSS selectors for Threadline elements
  * Prioritizes stability and uniqueness over brevity
  */
 
 import { escapeSelector, isFormElement } from '../utilities/selector-utils.js';
 
-export class AriadneSelectorGenerator {
+export class ThreadlineSelectorGenerator {
   private selectorCache = new Map<Element, string>();
   private uniquenessCache = new Map<string, boolean>();
   private elementIndexCache = new Map<Element, number>();

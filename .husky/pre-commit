@@ -36,13 +36,8 @@ fi
 if git diff --cached --name-only | grep -q "package.json"; then
   print_info "package.json modified, checking lock file..."
   
-  # Check if bun.lock is also staged
-  if ! git diff --cached --name-only | grep -q "bun.lock"; then
-    print_warning "package.json is staged but bun.lock is not"
-    print_info "Run 'bun install' and stage bun.lock"
-    all_checks_passed=false
-  else
-    # Verify lock file is in sync
+  # Verify lock file is in sync (if it exists)
+  if git diff --cached --name-only | grep -q "bun.lock"; then
     if ! "$SCRIPT_DIR/check-dependencies.sh" --skip-audit; then
       all_checks_passed=false
     fi

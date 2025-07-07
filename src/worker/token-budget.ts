@@ -3,7 +3,7 @@
  * Uses a simple heuristic: JSON length / 4 ≈ token count
  */
 
-import type { AriadneElement } from '../types/ariadne.js';
+import type { ThreadlineElement } from '../types/threadline.js';
 
 export class TokenBudgetManager {
   private budget: number;
@@ -21,7 +21,7 @@ export class TokenBudgetManager {
   /**
    * Add an element and update token count
    */
-  addElement(element: AriadneElement): void {
+  addElement(element: ThreadlineElement): void {
     if (this.exceeded || !element) return;
 
     const elementTokens = this.estimateTokens(element);
@@ -58,7 +58,7 @@ export class TokenBudgetManager {
    * Estimate token count for an element using improved algorithm
    * Uses different multipliers for different content types
    */
-  private estimateTokens(element: AriadneElement): number {
+  private estimateTokens(element: ThreadlineElement): number {
     if (!element) return 0;
 
     let totalTokens = 0;

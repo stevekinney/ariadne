@@ -1,12 +1,12 @@
 /**
- * Ariadne - Semantic HTML Extraction for LLM Navigation
+ * Threadline - Semantic HTML Extraction for LLM Navigation
  * Browser-based library using Web Workers for secure processing
  */
 
-import type { AriadneConfiguration } from './types/ariadne.js';
+import type { ThreadlineConfiguration } from './types/threadline.js';
 
 /**
- * The main Ariadne client class for semantic HTML extraction.
+ * The main Threadline client class for semantic HTML extraction.
  *
  * Provides a high-level interface for extracting semantic information from DOM documents.
  * Uses Web Workers for secure, non-blocking processing. Supports configuration for
@@ -14,23 +14,23 @@ import type { AriadneConfiguration } from './types/ariadne.js';
  *
  * @example
  * ```javascript
- * const client = new Ariadne({ tokenBudget: 5000 });
+ * const client = new Threadline({ tokenBudget: 5000 });
  * const map = await client.extract(document);
  * console.log(map.elements);
  * client.terminate(); // Clean up when done
  * ```
  */
-export { Ariadne } from './ariadne-client.js';
+export { Threadline } from './threadline-client.js';
 
 // Core types
 export type {
-  AriadneMap,
-  AriadneElement,
-  AriadneMeta,
-  AriadneRole,
-  AriadneConfiguration as AriadneConfig,
-  AriadneElementState,
-} from './types/ariadne.js';
+  ThreadlineMap,
+  ThreadlineElement,
+  ThreadlineMeta,
+  ThreadlineRole,
+  ThreadlineConfiguration as ThreadlineConfig,
+  ThreadlineElementState,
+} from './types/threadline.js';
 
 /**
  * Zod validation schemas for runtime type checking.
@@ -39,35 +39,35 @@ export type {
  * to ensure type safety at runtime and provide helpful error messages.
  */
 export {
-  /** Validates AriadneConfiguration objects with proper defaults and constraints */
-  AriadneConfigurationSchema,
+  /** Validates ThreadlineConfiguration objects with proper defaults and constraints */
+  ThreadlineConfigurationSchema,
   /** Validates Document objects to ensure they have required properties */
   DocumentSchema,
-} from './types/ariadne.js';
+} from './types/threadline.js';
 
 /**
  * Error handling utilities and classes.
  *
  * Provides structured error handling with specific error codes and operational flags.
- * All Ariadne-specific errors inherit from AriadneError for consistent handling.
+ * All Threadline-specific errors inherit from ThreadlineError for consistent handling.
  */
 export {
-  /** The main error class for all Ariadne-specific errors */
-  AriadneError,
-  /** Enumeration of all possible Ariadne error codes */
-  AriadneErrorCode,
-  /** Type guard to check if an error is an AriadneError instance */
-  isAriadneError,
+  /** The main error class for all Threadline-specific errors */
+  ThreadlineError,
+  /** Enumeration of all possible Threadline error codes */
+  ThreadlineErrorCode,
+  /** Type guard to check if an error is a ThreadlineError instance */
+  isThreadlineError,
   /** Type guard to check if an error is specifically a token limit exceeded error */
   isTokenLimitExceeded,
   /** Type guard to check if an error is specifically a worker error */
   isWorkerError,
-} from './errors/ariadne-errors.js';
+} from './errors/threadline-errors.js';
 
 /**
  * Convenience function for one-off semantic HTML extraction.
  *
- * Creates an Ariadne, performs extraction, and automatically cleans up.
+ * Creates a Threadline, performs extraction, and automatically cleans up.
  * This is the simplest way to extract semantic information from a document
  * if you don't need to reuse the client or control its lifecycle.
  *
@@ -75,7 +75,7 @@ export {
  * @param config - Optional configuration object for extraction parameters
  * @returns Promise that resolves to the extracted semantic map
  *
- * @throws {AriadneError} When document validation fails or extraction encounters an error
+ * @throws {ThreadlineError} When document validation fails or extraction encounters an error
  *
  * @example
  * ```javascript
@@ -97,20 +97,20 @@ export {
  */
 export async function extractSemanticMap(
   doc: Document,
-  config?: import('./types/ariadne.js').AriadneConfiguration,
-): Promise<import('./types/ariadne.js').AriadneMap> {
+  config?: import('./types/threadline.js').ThreadlineConfiguration,
+): Promise<import('./types/threadline.js').ThreadlineMap> {
   // Validate inputs
-  const { DocumentSchema, AriadneConfigurationSchema } = await import(
-    './types/ariadne.js'
+  const { DocumentSchema, ThreadlineConfigurationSchema } = await import(
+    './types/threadline.js'
   );
-  const { AriadneError } = await import('./errors/ariadne-errors.js');
+  const { ThreadlineError } = await import('./errors/threadline-errors.js');
 
   try {
     DocumentSchema.parse(doc);
-    const validatedConfig = config ? AriadneConfigurationSchema.parse(config) : undefined;
+    const validatedConfig = config ? ThreadlineConfigurationSchema.parse(config) : undefined;
 
-    const { Ariadne } = await import('./ariadne-client.js');
-    const client = new Ariadne(validatedConfig as AriadneConfiguration);
+    const { Threadline } = await import('./threadline-client.js');
+    const client = new Threadline(validatedConfig as ThreadlineConfiguration);
 
     try {
       return await client.extract(doc);
@@ -119,7 +119,7 @@ export async function extractSemanticMap(
     }
   } catch (error) {
     if (error instanceof Error && error.name === 'ZodError') {
-      throw AriadneError.invalidDocument({ validationError: error.message });
+      throw ThreadlineError.invalidDocument({ validationError: error.message });
     }
     throw error;
   }
@@ -127,5 +127,5 @@ export async function extractSemanticMap(
 
 // Browser environment check
 if (typeof window === 'undefined' || typeof Worker === 'undefined') {
-  console.warn('⚠️  Ariadne requires a browser environment with Web Worker support');
+  console.warn('⚠️  Threadline requires a browser environment with Web Worker support');
 }

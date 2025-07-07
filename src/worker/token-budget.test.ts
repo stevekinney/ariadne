@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'bun:test';
 
-import type { AriadneElement } from '../types/ariadne.js';
+import type { ThreadlineElement } from '../types/threadline.js';
 import { TokenBudgetManager } from './token-budget.js';
 
 describe('TokenBudgetManager', () => {
@@ -17,7 +17,7 @@ describe('TokenBudgetManager', () => {
   });
 
   it('should add tokens for elements', () => {
-    const element: AriadneElement = {
+    const element: ThreadlineElement = {
       id: '12345678',
       role: 'input',
       label: 'Email Address',
@@ -36,7 +36,7 @@ describe('TokenBudgetManager', () => {
   });
 
   it('should detect budget exceeded', () => {
-    const largeElement: AriadneElement = {
+    const largeElement: ThreadlineElement = {
       id: '12345678',
       role: 'paragraph',
       label: 'A'.repeat(4000), // Very large label to ensure budget exceeded
@@ -52,7 +52,7 @@ describe('TokenBudgetManager', () => {
 
   it('should stop counting after budget exceeded', () => {
     // Fill up the budget
-    const largeElement: AriadneElement = {
+    const largeElement: ThreadlineElement = {
       id: '12345678',
       role: 'paragraph',
       label: 'A'.repeat(4000), // Ensure budget is exceeded
@@ -77,7 +77,7 @@ describe('TokenBudgetManager', () => {
   });
 
   it('should calculate statistics correctly', () => {
-    const element: AriadneElement = {
+    const element: ThreadlineElement = {
       id: '12345678',
       role: 'input',
       selector: 'input',
@@ -95,7 +95,7 @@ describe('TokenBudgetManager', () => {
   });
 
   it('should reset properly', () => {
-    const element: AriadneElement = {
+    const element: ThreadlineElement = {
       id: '12345678',
       role: 'input',
       selector: 'input',
@@ -111,7 +111,7 @@ describe('TokenBudgetManager', () => {
   });
 
   it('should handle complex elements with all properties', () => {
-    const complexElement: AriadneElement = {
+    const complexElement: ThreadlineElement = {
       id: '12345678',
       role: 'input',
       label: 'Email Address',
@@ -137,7 +137,7 @@ describe('TokenBudgetManager', () => {
   it('should provide accurate remaining tokens', () => {
     expect(manager.getRemainingTokens()).toBe(950);
 
-    const element: AriadneElement = {
+    const element: ThreadlineElement = {
       id: '12345678',
       role: 'button',
       label: 'Click me',

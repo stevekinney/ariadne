@@ -1,2 +1,2 @@
-// Ariadne semantic extraction types
-export * from './ariadne.js';
+// Threadline semantic extraction types
+export * from './threadline.js';

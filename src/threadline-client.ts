@@ -1,62 +1,62 @@
 /**
- * Ariadne - Main Thread Interface
+ * Threadline - Main Thread Interface
  * Manages the extraction process and communication with the Web Worker
  */
 
-import { AriadneError } from './errors/ariadne-errors.js';
+import { ThreadlineError } from './errors/threadline-errors.js';
 import {
-  AriadneConfigurationSchema,
+  ThreadlineConfigurationSchema,
   DocumentSchema,
-  type AriadneConfiguration,
-  type AriadneMap,
-  type AriadneWorkerRequest,
-  type AriadneWorkerResponse,
-} from './types/ariadne.js';
+  type ThreadlineConfiguration,
+  type ThreadlineMap,
+  type ThreadlineWorkerRequest,
+  type ThreadlineWorkerResponse,
+} from './types/threadline.js';
 import { generateSimpleSelector } from './utilities/selector-utils.js';
 import { HashIdGenerator } from './worker/hash-id-generator.js';
 
 /**
- * Main Ariadne client for semantic HTML extraction.
+ * Main Threadline client for semantic HTML extraction.
  *
- * The Ariadne class provides a robust interface for extracting semantic information
+ * The Threadline class provides a robust interface for extracting semantic information
  * from DOM documents using Web Workers. It manages the worker lifecycle, handles
  * configuration validation, implements memory management, and provides error handling.
  *
  * @example
  * ```javascript
  * // Create client with default configuration
- * const ariadne = new Ariadne();
+ * const threadline = new Threadline();
  *
  * // Create client with custom configuration
- * const ariadne = new Ariadne({
+ * const threadline = new Threadline({
  *   tokenBudget: 8000,
  *   includeChildren: false,
  *   debug: true
  * });
  *
  * // Extract semantic information
- * const map = await ariadne.extract(document);
+ * const map = await threadline.extract(document);
  *
  * // Clean up when done
- * ariadne.terminate();
+ * threadline.terminate();
  * ```
  */
-export class Ariadne {
+export class Threadline {
   private worker: Worker | null = null;
-  private config: AriadneConfiguration;
+  private config: ThreadlineConfiguration;
   private abortController: AbortController | null = null;
   private cleanupTasks: (() => void)[] = [];
   private idGenerator: HashIdGenerator | null = null;
 
   /**
-   * Create a new Ariadne client instance.
+   * Create a new Threadline client instance.
    *
    * @param config - Configuration object for extraction parameters.
    *   - tokenBudget: Maximum number of tokens to use (default: 4000)
    *   - includeChildren: Whether to include children arrays in elements (default: true)
    *   - debug: Enable debug mode for additional logging (default: false)
    *
-   * @throws {AriadneError} When configuration validation fails
+   * @throws {ThreadlineError} When configuration validation fails
    *
    * @example
    * ```javascript
@@ -70,13 +70,13 @@ export class Ariadne {
    * });
    * ```
    */
-  constructor(config: AriadneConfiguration = {}) {
+  constructor(config: ThreadlineConfiguration = {}) {
     try {
-      this.config = AriadneConfigurationSchema.parse(config) as Required<
-        Pick<AriadneConfiguration, 'tokenBudget' | 'includeChildren' | 'debug' | 'markElements' | 'elementAttribute' | 'compact' | 'elementsAsObject' | 'includeElementIds'>
-      > & Pick<AriadneConfiguration, 'onElementProcess'>;
+      this.config = ThreadlineConfigurationSchema.parse(config) as Required<
+        Pick<ThreadlineConfiguration, 'tokenBudget' | 'includeChildren' | 'debug' | 'markElements' | 'elementAttribute' | 'compact' | 'elementsAsObject' | 'includeElementIds'>
+      > & Pick<ThreadlineConfiguration, 'onElementProcess'>;
     } catch (error) {
-      throw AriadneError.invalidDocument({
+      throw ThreadlineError.invalidDocument({
         message: 'Invalid configuration provided',
         validationError:
           error instanceof Error ? error.message : 'Unknown validation error',
@@ -94,7 +94,7 @@ export class Ariadne {
    * @param doc - The DOM document to process. Must be a valid Document object
    *   with documentElement, location, and body properties.
    *
-   * @returns Promise that resolves to an AriadneMap containing:
+   * @returns Promise that resolves to an ThreadlineMap containing:
    *   - schemaVersion: The version of the extraction schema used
    *   - meta: Metadata about the document (URL, timestamp, dynamic content detection)
    *   - elements: Array of extracted semantic elements
@@ -133,12 +133,12 @@ export class Ariadne {
    * }
    * ```
    */
-  public async extract(doc: Document): Promise<AriadneMap> {
+  public async extract(doc: Document): Promise<ThreadlineMap> {
     // Validate document
     try {
       DocumentSchema.parse(doc);
     } catch (error) {
-      throw AriadneError.invalidDocument({
+      throw ThreadlineError.invalidDocument({
         message: 'Invalid document provided',
         validationError:
           error instanceof Error ? error.message : 'Unknown validation error',
@@ -151,7 +151,7 @@ export class Ariadne {
     try {
       // Initialize worker if not already created
       if (!this.worker) {
-        this.worker = new Worker(new URL('./ariadne.worker.js', import.meta.url), {
+        this.worker = new Worker(new URL('./threadline.worker.js', import.meta.url), {
           type: 'module',
         });
 
@@ -368,7 +368,7 @@ export class Ariadne {
 
       // Mark element with data attribute if requested
       if (this.config.markElements) {
-        const attributeName = this.config.elementAttribute || 'data-ariadne-id';
+        const attributeName = this.config.elementAttribute || 'data-threadline-id';
         original.setAttribute(attributeName, id);
         (clone as Element).setAttribute(attributeName, id);
       }
@@ -460,10 +460,10 @@ export class Ariadne {
   /**
    * Send request to worker and await response with timeout and memory management
    */
-  private sendToWorker(request: AriadneWorkerRequest): Promise<AriadneMap> {
+  private sendToWorker(request: ThreadlineWorkerRequest): Promise<ThreadlineMap> {
     return new Promise((resolve, reject) => {
       if (!this.worker) {
-        reject(AriadneError.workerError('Worker not initialized'));
+        reject(ThreadlineError.workerError('Worker not initialized'));
         return;
       }
 
@@ -491,7 +491,7 @@ export class Ariadne {
         }
       };
 
-      const messageHandler = (event: MessageEvent<AriadneWorkerResponse>) => {
+      const messageHandler = (event: MessageEvent<ThreadlineWorkerResponse>) => {
         if (isResolved) return;
         cleanup();
 
@@ -501,7 +501,7 @@ export class Ariadne {
         } else if (event.data?.error === 'DOMPARSER_UNAVAILABLE') {
           // DOMParser not available in worker - fall back to main thread processing
           if (this.config.debug) {
-            console.warn('[Ariadne] DOMParser unavailable in Web Worker, falling back to main thread processing');
+            console.warn('[Threadline] DOMParser unavailable in Web Worker, falling back to main thread processing');
           }
           // Don't mark as resolved yet - we're trying fallback
           this.extractInMainThread(request)
@@ -514,14 +514,14 @@ export class Ariadne {
             .catch(fallbackError => {
               if (!isResolved) {
                 isResolved = true;
-                reject(AriadneError.workerError(
+                reject(ThreadlineError.workerError(
                   `Web Worker failed and main thread fallback failed: ${fallbackError instanceof Error ? fallbackError.message : 'Unknown error'}`
                 ));
               }
             });
         } else {
           isResolved = true;
-          reject(AriadneError.workerError(event.data?.error || 'Unknown worker error'));
+          reject(ThreadlineError.workerError(event.data?.error || 'Unknown worker error'));
         }
       };
 
@@ -530,7 +530,7 @@ export class Ariadne {
         isResolved = true;
         cleanup();
         reject(
-          AriadneError.workerError(`Worker error: ${error.message || 'Unknown error'}`),
+          ThreadlineError.workerError(`Worker error: ${error.message || 'Unknown error'}`),
         );
       };
 
@@ -539,7 +539,7 @@ export class Ariadne {
         if (isResolved) return;
         isResolved = true;
         cleanup();
-        reject(AriadneError.workerError('Failed to parse worker message'));
+        reject(ThreadlineError.workerError('Failed to parse worker message'));
       };
 
       // Set up abort signal handling with proper cleanup
@@ -548,7 +548,7 @@ export class Ariadne {
           if (isResolved) return;
           isResolved = true;
           cleanup();
-          reject(AriadneError.processingTimeout(30000, { reason: 'aborted' }));
+          reject(ThreadlineError.processingTimeout(30000, { reason: 'aborted' }));
         };
         this.abortController.signal.addEventListener('abort', abortHandler);
       }
@@ -559,7 +559,7 @@ export class Ariadne {
         isResolved = true;
         cleanup();
         reject(
-          AriadneError.processingTimeout(30000, {
+          ThreadlineError.processingTimeout(30000, {
             url: request.metadata.url,
             timestamp: request.metadata.timestamp,
           }),
@@ -581,7 +581,7 @@ export class Ariadne {
         isResolved = true;
         cleanup();
         reject(
-          AriadneError.workerError(
+          ThreadlineError.workerError(
             `Failed to send message to worker: ${error instanceof Error ? error.message : 'Unknown error'}`,
           ),
         );
@@ -592,7 +592,7 @@ export class Ariadne {
   /**
    * Fallback method to extract semantic map in main thread when Web Worker fails
    */
-  private async extractInMainThread(request: AriadneWorkerRequest): Promise<AriadneMap> {
+  private async extractInMainThread(request: ThreadlineWorkerRequest): Promise<ThreadlineMap> {
     // Parse the HTML string into a document
     const parser = new DOMParser();
     const doc = parser.parseFromString(request.html, 'text/html');
@@ -688,7 +688,7 @@ export class Ariadne {
    *
    * Cancels any in-progress extraction without terminating the worker.
    * The client can still be used for subsequent extractions after aborting.
-   * The aborted extraction will reject with an AriadneError.
+   * The aborted extraction will reject with an ThreadlineError.
    *
    * This is useful when you need to cancel a long-running extraction,
    * for example when a user navigates away from a page.

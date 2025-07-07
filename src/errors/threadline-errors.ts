@@ -1,5 +1,5 @@
 /**
- * Error types specific to Ariadne semantic extraction
+ * Error types specific to Threadline semantic extraction
  */
 
 /**
@@ -26,13 +26,13 @@ class BaseError extends Error {
 }
 
 /**
- * Enumeration of all possible Ariadne error codes.
+ * Enumeration of all possible Threadline error codes.
  *
  * Each error code represents a specific category of error that can occur
  * during semantic extraction. Use these codes to handle different error
  * types programmatically.
  */
-export enum AriadneErrorCode {
+export enum ThreadlineErrorCode {
   /** General extraction failure */
   EXTRACTION_FAILED = 'EXTRACTION_FAILED',
   /** Web Worker related errors */
@@ -48,18 +48,18 @@ export enum AriadneErrorCode {
 }
 
 /**
- * Main error class for all Ariadne-specific errors.
+ * Main error class for all Threadline-specific errors.
  *
- * AriadneError extends the base Error class with additional properties
+ * ThreadlineError extends the base Error class with additional properties
  * for error categorization, operational flags, and contextual details.
- * All errors thrown by Ariadne will be instances of this class.
+ * All errors thrown by Threadline will be instances of this class.
  *
  * @example
  * ```javascript
  * try {
  *   const map = await extractSemanticMap(document);
  * } catch (error) {
- *   if (error instanceof AriadneError) {
+ *   if (error instanceof ThreadlineError) {
  *     console.log(`Error code: ${error.code}`);
  *     console.log(`Operational: ${error.isOperational}`);
  *     console.log(`Details:`, error.details);
@@ -67,26 +67,26 @@ export enum AriadneErrorCode {
  * }
  * ```
  */
-export class AriadneError extends BaseError {
+export class ThreadlineError extends BaseError {
   constructor(
     message: string,
-    public override readonly code: AriadneErrorCode,
+    public override readonly code: ThreadlineErrorCode,
     public readonly details?: Record<string, unknown>,
   ) {
-    super(message, 'ARIADNE_ERROR', 500, true);
-    this.name = 'AriadneError';
+    super(message, 'THREADLINE_ERROR', 500, true);
+    this.name = 'ThreadlineError';
   }
 
   /**
    * Create an extraction failed error.
    *
    * @param details - Additional error context and debugging information
-   * @returns AriadneError with EXTRACTION_FAILED code
+   * @returns ThreadlineError with EXTRACTION_FAILED code
    */
-  static extractionFailed(details?: Record<string, unknown>): AriadneError {
-    return new AriadneError(
+  static extractionFailed(details?: Record<string, unknown>): ThreadlineError {
+    return new ThreadlineError(
       'Failed to extract semantic map from document',
-      AriadneErrorCode.EXTRACTION_FAILED,
+      ThreadlineErrorCode.EXTRACTION_FAILED,
       details,
     );
   }
@@ -96,12 +96,12 @@ export class AriadneError extends BaseError {
    *
    * @param message - Specific error message from the worker
    * @param details - Additional error context and debugging information
-   * @returns AriadneError with WORKER_ERROR code
+   * @returns ThreadlineError with WORKER_ERROR code
    */
-  static workerError(message: string, details?: Record<string, unknown>): AriadneError {
-    return new AriadneError(
+  static workerError(message: string, details?: Record<string, unknown>): ThreadlineError {
+    return new ThreadlineError(
       `Web Worker error: ${message}`,
-      AriadneErrorCode.WORKER_ERROR,
+      ThreadlineErrorCode.WORKER_ERROR,
       details,
     );
   }
@@ -110,12 +110,12 @@ export class AriadneError extends BaseError {
    * Create a DOM parsing error.
    *
    * @param details - Additional error context and debugging information
-   * @returns AriadneError with DOM_PARSING_ERROR code
+   * @returns ThreadlineError with DOM_PARSING_ERROR code
    */
-  static domParsingError(details?: Record<string, unknown>): AriadneError {
-    return new AriadneError(
+  static domParsingError(details?: Record<string, unknown>): ThreadlineError {
+    return new ThreadlineError(
       'Failed to parse DOM structure',
-      AriadneErrorCode.DOM_PARSING_ERROR,
+      ThreadlineErrorCode.DOM_PARSING_ERROR,
       details,
     );
   }
@@ -125,15 +125,15 @@ export class AriadneError extends BaseError {
    *
    * @param limit - The token limit that was exceeded
    * @param details - Additional error context and debugging information
-   * @returns AriadneError with TOKEN_LIMIT_EXCEEDED code
+   * @returns ThreadlineError with TOKEN_LIMIT_EXCEEDED code
    */
   static tokenLimitExceeded(
     limit: number,
     details?: Record<string, unknown>,
-  ): AriadneError {
-    return new AriadneError(
+  ): ThreadlineError {
+    return new ThreadlineError(
       `Token limit of ${limit} exceeded during extraction`,
-      AriadneErrorCode.TOKEN_LIMIT_EXCEEDED,
+      ThreadlineErrorCode.TOKEN_LIMIT_EXCEEDED,
       { limit, ...details },
     );
   }
@@ -142,12 +142,12 @@ export class AriadneError extends BaseError {
    * Create an invalid document error.
    *
    * @param details - Additional error context and debugging information
-   * @returns AriadneError with INVALID_DOCUMENT code
+   * @returns ThreadlineError with INVALID_DOCUMENT code
    */
-  static invalidDocument(details?: Record<string, unknown>): AriadneError {
-    return new AriadneError(
+  static invalidDocument(details?: Record<string, unknown>): ThreadlineError {
+    return new ThreadlineError(
       'Invalid or empty document provided',
-      AriadneErrorCode.INVALID_DOCUMENT,
+      ThreadlineErrorCode.INVALID_DOCUMENT,
       details,
     );
   }
@@ -157,34 +157,34 @@ export class AriadneError extends BaseError {
    *
    * @param timeout - The timeout value in milliseconds that was exceeded
    * @param details - Additional error context and debugging information
-   * @returns AriadneError with PROCESSING_TIMEOUT code
+   * @returns ThreadlineError with PROCESSING_TIMEOUT code
    */
   static processingTimeout(
     timeout: number,
     details?: Record<string, unknown>,
-  ): AriadneError {
-    return new AriadneError(
+  ): ThreadlineError {
+    return new ThreadlineError(
       `Processing timeout after ${timeout}ms`,
-      AriadneErrorCode.PROCESSING_TIMEOUT,
+      ThreadlineErrorCode.PROCESSING_TIMEOUT,
       { timeout, ...details },
     );
   }
 }
 
 /**
- * Type guard to check if an error is an AriadneError instance.
+ * Type guard to check if an error is a ThreadlineError instance.
  *
  * @param error - The error to check
- * @returns True if the error is an AriadneError, false otherwise
+ * @returns True if the error is a ThreadlineError, false otherwise
  *
  * @example
  * ```javascript
  * try {
  *   await extractSemanticMap(document);
  * } catch (error) {
- *   if (isAriadneError(error)) {
- *     // Handle Ariadne-specific error
- *     console.log(`Ariadne error: ${error.code}`);
+ *   if (isThreadlineError(error)) {
+ *     // Handle Threadline-specific error
+ *     console.log(`Threadline error: ${error.code}`);
  *   } else {
  *     // Handle other types of errors
  *     console.log('Unexpected error:', error);
@@ -192,8 +192,8 @@ export class AriadneError extends BaseError {
  * }
  * ```
  */
-export function isAriadneError(error: unknown): error is AriadneError {
-  return error instanceof AriadneError;
+export function isThreadlineError(error: unknown): error is ThreadlineError {
+  return error instanceof ThreadlineError;
 }
 
 /**
@@ -214,7 +214,7 @@ export function isAriadneError(error: unknown): error is AriadneError {
  * ```
  */
 export function isTokenLimitExceeded(error: unknown): boolean {
-  return isAriadneError(error) && error.code === AriadneErrorCode.TOKEN_LIMIT_EXCEEDED;
+  return isThreadlineError(error) && error.code === ThreadlineErrorCode.TOKEN_LIMIT_EXCEEDED;
 }
 
 /**
@@ -235,5 +235,5 @@ export function isTokenLimitExceeded(error: unknown): boolean {
  * ```
  */
 export function isWorkerError(error: unknown): boolean {
-  return isAriadneError(error) && error.code === AriadneErrorCode.WORKER_ERROR;
+  return isThreadlineError(error) && error.code === ThreadlineErrorCode.WORKER_ERROR;
 }

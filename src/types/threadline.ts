@@ -1,6 +1,6 @@
 /**
- * Ariadne Type Definitions
- * Complete type system for the Ariadne semantic extraction service
+ * Threadline Type Definitions
+ * Complete type system for the Threadline semantic extraction service
  */
 
 import { z } from 'zod';
@@ -8,7 +8,7 @@ import { z } from 'zod';
 /**
  * Metadata about the document being processed.
  */
-export interface AriadneMeta {
+export interface ThreadlineMeta {
   /** The URL of the document when extraction occurred */
   url: string;
   /** Timestamp when extraction was performed (milliseconds since epoch) */
@@ -23,7 +23,7 @@ export interface AriadneMeta {
  * Captures the current state of form elements and interactive components
  * at the time of extraction.
  */
-export interface AriadneElementState {
+export interface ThreadlineElementState {
   /** For checkbox and radio inputs - whether the element is checked */
   checked?: boolean;
   /** Current value of the element (for inputs, selects, textareas) */
@@ -44,10 +44,10 @@ export interface AriadneElementState {
  * Each element contains identification, semantic role, positioning,
  * and contextual information needed for automated interaction.
  */
-export interface AriadneElement {
+export interface ThreadlineElement {
   /** Unique identifier generated using crypto.randomUUID() */
   id: string;
-  /** Semantic role from the supported AriadneRole list */
+  /** Semantic role from the supported ThreadlineRole list */
   role: string;
   /** Human-readable label resolved using accessibility best practices */
   label?: string;
@@ -58,7 +58,7 @@ export interface AriadneElement {
   /** Array of child element IDs (included when includeChildren is true) */
   children?: string[];
   /** Current state of interactive elements */
-  state?: AriadneElementState;
+  state?: ThreadlineElementState;
   /** URL for link elements */
   href?: string;
   /** True if element has closed shadow DOM that cannot be accessed */
@@ -79,15 +79,15 @@ export interface AriadneElement {
  * Contains all extracted semantic elements along with metadata
  * and information about the extraction process.
  */
-export interface AriadneMap {
+export interface ThreadlineMap {
   /** Version of the extraction schema used */
   schemaVersion: string;
   /** Metadata about the source document */
-  meta: AriadneMeta;
+  meta: ThreadlineMeta;
   /** Array of all extracted semantic elements (when elementsAsObject is false) */
-  elements?: AriadneElement[];
+  elements?: ThreadlineElement[];
   /** Object mapping element IDs to elements (when elementsAsObject is true) */
-  elementsById?: Record<string, AriadneElement>;
+  elementsById?: Record<string, ThreadlineElement>;
   /** Array of all element IDs (when includeElementIds is true) */
   elementIds?: string[];
   /** True if extraction was stopped before completion */
@@ -105,7 +105,7 @@ export interface AriadneMap {
  * of HTML elements. The extraction process maps HTML elements to these
  * standardized roles for consistent interpretation.
  */
-export type AriadneRole =
+export type ThreadlineRole =
   /** Form container element */
   | 'form'
   /** Generic text input field */
@@ -170,7 +170,7 @@ export type AriadneRole =
   | 'table_cell';
 
 // Message types for worker communication
-export interface AriadneWorkerRequest {
+export interface ThreadlineWorkerRequest {
   html: string;
   metadata: {
     url: string;
@@ -179,20 +179,20 @@ export interface AriadneWorkerRequest {
   };
 }
 
-export interface AriadneWorkerResponse {
+export interface ThreadlineWorkerResponse {
   type: 'success' | 'error';
   code?: string;
-  data?: AriadneMap;
+  data?: ThreadlineMap;
   error?: string;
 }
 
 /**
- * Configuration options for Ariadne extraction.
+ * Configuration options for Threadline extraction.
  *
  * Controls various aspects of the semantic extraction process
  * including performance limits and output formatting.
  */
-export interface AriadneConfiguration {
+export interface ThreadlineConfiguration {
   /** Maximum number of tokens to use during extraction (default: 4000) */
   tokenBudget?: number;
   /** Whether to include children arrays in element objects (default: true) */
@@ -205,7 +205,7 @@ export interface AriadneConfiguration {
   onElementProcess?: (element: Element, id: string) => void;
   /** Whether to mark elements with data attributes (default: false) */
   markElements?: boolean;
-  /** The attribute name to use for marking elements (default: 'data-ariadne-id') */
+  /** The attribute name to use for marking elements (default: 'data-threadline-id') */
   elementAttribute?: string;
   
   // Output format options
@@ -218,7 +218,7 @@ export interface AriadneConfiguration {
 }
 
 // Validation schemas
-export const AriadneConfigurationSchema = z
+export const ThreadlineConfigurationSchema = z
   .object({
     tokenBudget: z.number().int().positive().max(100000).optional().default(4000),
     includeChildren: z.boolean().optional().default(true),
@@ -227,7 +227,7 @@ export const AriadneConfigurationSchema = z
     // Node processing options
     onElementProcess: z.function().args(z.any(), z.string()).returns(z.void()).optional(),
     markElements: z.boolean().optional().default(false),
-    elementAttribute: z.string().optional().default('data-ariadne-id'),
+    elementAttribute: z.string().optional().default('data-threadline-id'),
     
     // Output format options
     compact: z.boolean().optional().default(false),

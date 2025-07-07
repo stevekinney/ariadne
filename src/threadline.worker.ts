@@ -1,14 +1,14 @@
 /**
- * AriadneWorker - Web Worker Entry Point
+ * ThreadlineWorker - Web Worker Entry Point
  * Sandboxed environment for safe DOM processing with improved memory management
  */
 
 import type {
-  AriadneConfiguration,
-  AriadneMap,
-  AriadneWorkerRequest,
-  AriadneWorkerResponse,
-} from './types/ariadne.js';
+  ThreadlineConfiguration,
+  ThreadlineMap,
+  ThreadlineWorkerRequest,
+  ThreadlineWorkerResponse,
+} from './types/threadline.js';
 import { DomProcessor } from './worker/dom-processor.js';
 
 // Track active processors for cleanup
@@ -24,8 +24,8 @@ self.onmessage = async (event: MessageEvent) => {
     return;
   }
 
-  const { html, metadata, config } = messageData as AriadneWorkerRequest & {
-    config: AriadneConfiguration;
+  const { html, metadata, config } = messageData as ThreadlineWorkerRequest & {
+    config: ThreadlineConfiguration;
   };
 
   let processor: DomProcessor | null = null;
@@ -57,7 +57,7 @@ self.onmessage = async (event: MessageEvent) => {
     } catch {
       // DOMParser not available in this Web Worker environment
       // Signal to main thread that fallback is needed
-      const response: AriadneWorkerResponse = {
+      const response: ThreadlineWorkerResponse = {
         type: 'error',
         error: 'DOMPARSER_UNAVAILABLE',
         code: 'DOMPARSER_UNAVAILABLE',
@@ -70,7 +70,7 @@ self.onmessage = async (event: MessageEvent) => {
     processor = new DomProcessor(doc, metadata, config);
     activeProcessors.push(processor);
 
-    const ariadneMap: AriadneMap = processor.generateMap();
+    const ariadneMap: ThreadlineMap = processor.generateMap();
 
     // Remove from active processors on completion
     const index = activeProcessors.indexOf(processor);
@@ -79,7 +79,7 @@ self.onmessage = async (event: MessageEvent) => {
     }
 
     // Send success response
-    const response: AriadneWorkerResponse = {
+    const response: ThreadlineWorkerResponse = {
       type: 'success',
       data: ariadneMap,
     };
@@ -95,7 +95,7 @@ self.onmessage = async (event: MessageEvent) => {
     }
 
     // Send error response with more context
-    const response: AriadneWorkerResponse = {
+    const response: ThreadlineWorkerResponse = {
       type: 'error',
       error: error instanceof Error ? error.message : 'Unknown processing error',
     };
@@ -132,7 +132,7 @@ function performCleanup(): void {
 
 // Handle any uncaught errors in the worker
 self.onerror = (error) => {
-  const response: AriadneWorkerResponse = {
+  const response: ThreadlineWorkerResponse = {
     type: 'error',
     error: 'Worker crashed: ' + error.toString(),
   };

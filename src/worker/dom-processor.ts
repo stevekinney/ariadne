@@ -4,31 +4,31 @@
  */
 
 import type {
-  AriadneConfiguration,
-  AriadneElement,
-  AriadneMap,
-  AriadneRole,
-} from '../types/ariadne.js';
+  ThreadlineConfiguration,
+  ThreadlineElement,
+  ThreadlineMap,
+  ThreadlineRole,
+} from '../types/threadline.js';
 import { HashIdGenerator } from './hash-id-generator.js';
 import { LabelResolver } from './label-resolver.js';
-import { AriadneSelectorGenerator } from './selector-generator.js';
+import { ThreadlineSelectorGenerator } from './selector-generator.js';
 import { TokenBudgetManager } from './token-budget.js';
 
 export class DomProcessor {
   private doc: Document;
   private metadata: { url: string; timestamp: number; isPotentiallyDynamic?: boolean };
-  private config: AriadneConfiguration;
+  private config: ThreadlineConfiguration;
   private idGenerator: HashIdGenerator;
   private labelResolver: LabelResolver;
-  private selectorGenerator: AriadneSelectorGenerator;
+  private selectorGenerator: ThreadlineSelectorGenerator;
   private tokenBudget: TokenBudgetManager;
   private nodeToId: Map<Node, string> = new Map();
-  private elements: AriadneElement[] = [];
+  private elements: ThreadlineElement[] = [];
 
   constructor(
     doc: Document,
     metadata: { url: string; timestamp: number; isPotentiallyDynamic?: boolean },
-    config: AriadneConfiguration = {},
+    config: ThreadlineConfiguration = {},
   ) {
     this.doc = doc;
     this.metadata = metadata;
@@ -42,20 +42,20 @@ export class DomProcessor {
     // Initialize components
     this.idGenerator = new HashIdGenerator();
     this.labelResolver = new LabelResolver(doc);
-    this.selectorGenerator = new AriadneSelectorGenerator();
+    this.selectorGenerator = new ThreadlineSelectorGenerator();
     this.tokenBudget = new TokenBudgetManager(this.config.tokenBudget!);
   }
 
   /**
    * Generate the semantic map
    */
-  generateMap(): AriadneMap {
+  generateMap(): ThreadlineMap {
     try {
       // Process the DOM
       this.processDocument();
 
       // Build the final map with appropriate format
-      const map: AriadneMap = {
+      const map: ThreadlineMap = {
         schemaVersion: '1.0',
         meta: {
           url: this.metadata.url,
@@ -72,7 +72,7 @@ export class DomProcessor {
       // Apply output format based on configuration
       if (this.config.elementsAsObject) {
         // Convert array to object keyed by ID
-        const elementsById: Record<string, AriadneElement> = {};
+        const elementsById: Record<string, ThreadlineElement> = {};
         for (const element of this.elements) {
           elementsById[element.id] = element;
         }
@@ -96,7 +96,7 @@ export class DomProcessor {
       this.internalCleanup();
 
       // Return error state
-      const errorMap: AriadneMap = {
+      const errorMap: ThreadlineMap = {
         schemaVersion: '1.0',
         meta: {
           url: this.metadata.url,
@@ -130,7 +130,7 @@ export class DomProcessor {
     // Clear references to DOM objects to prevent memory leaks
     this.doc = null as unknown as Document;
     this.labelResolver = null as unknown as LabelResolver;
-    this.selectorGenerator = null as unknown as AriadneSelectorGenerator;
+    this.selectorGenerator = null as unknown as ThreadlineSelectorGenerator;
     this.tokenBudget = null as unknown as TokenBudgetManager;
     this.idGenerator = null as unknown as HashIdGenerator;
   }
@@ -251,7 +251,7 @@ export class DomProcessor {
     }
 
     // Create element object
-    const ariadneElement: AriadneElement = {
+    const ariadneElement: ThreadlineElement = {
       id,
       role,
       selector: this.selectorGenerator.generate(element),
@@ -310,7 +310,7 @@ export class DomProcessor {
   /**
    * Get the semantic role for an element
    */
-  private getElementRole(element: Element): AriadneRole | null {
+  private getElementRole(element: Element): ThreadlineRole | null {
     const tagName = element.tagName.toLowerCase();
 
     // Form elements
@@ -400,8 +400,8 @@ export class DomProcessor {
   /**
    * Get current state of interactive elements
    */
-  private getElementState(element: Element): AriadneElement['state'] {
-    const state: AriadneElement['state'] = {};
+  private getElementState(element: Element): ThreadlineElement['state'] {
+    const state: ThreadlineElement['state'] = {};
 
     const tagName = element.tagName.toLowerCase();
 

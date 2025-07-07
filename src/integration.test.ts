@@ -1,5 +1,5 @@
 /**
- * Integration tests for Ariadne API and component integration
+ * Integration tests for Threadline API and component integration
  * Tests the public API, error handling, and component interactions
  */
 
@@ -7,38 +7,38 @@ import { describe, expect, it } from 'bun:test';
 import './test-setup.js'; // Import DOM setup before other imports
 
 import {
-  Ariadne,
-  AriadneConfigurationSchema,
-  AriadneError,
-  AriadneErrorCode,
+  Threadline,
+  ThreadlineConfigurationSchema,
+  ThreadlineError,
+  ThreadlineErrorCode,
   DocumentSchema,
-  isAriadneError,
+  isThreadlineError,
   isTokenLimitExceeded,
   isWorkerError,
 } from './index.js';
-import type { AriadneConfiguration } from './types/ariadne.js';
+import type { ThreadlineConfiguration } from './types/threadline.js';
 
-describe('Ariadne API Integration Tests', () => {
+describe('Threadline API Integration Tests', () => {
   describe('Configuration Validation', () => {
     it('should validate and apply configuration correctly', () => {
-      const validConfig: AriadneConfiguration = {
+      const validConfig: ThreadlineConfiguration = {
         tokenBudget: 5000,
         includeChildren: false,
         debug: true,
       };
 
-      const result = AriadneConfigurationSchema.parse(validConfig);
+      const result = ThreadlineConfigurationSchema.parse(validConfig);
       expect(result.tokenBudget).toBe(5000);
       expect(result.includeChildren).toBe(false);
       expect(result.debug).toBe(true);
     });
 
     it('should apply defaults for missing properties', () => {
-      const partialConfig: AriadneConfiguration = {
+      const partialConfig: ThreadlineConfiguration = {
         tokenBudget: 2000,
       };
 
-      const result = AriadneConfigurationSchema.parse(partialConfig);
+      const result = ThreadlineConfigurationSchema.parse(partialConfig);
       expect(result.tokenBudget).toBe(2000);
       expect(result.includeChildren).toBe(true); // default
       expect(result.debug).toBe(false); // default
@@ -46,19 +46,19 @@ describe('Ariadne API Integration Tests', () => {
 
     it('should reject invalid configuration', () => {
       expect(() => {
-        AriadneConfigurationSchema.parse({
+        ThreadlineConfigurationSchema.parse({
           tokenBudget: -1000, // invalid negative value
         });
       }).toThrow();
 
       expect(() => {
-        AriadneConfigurationSchema.parse({
+        ThreadlineConfigurationSchema.parse({
           tokenBudget: 'invalid', // wrong type
         });
       }).toThrow();
 
       expect(() => {
-        AriadneConfigurationSchema.parse({
+        ThreadlineConfigurationSchema.parse({
           tokenBudget: 200000, // exceeds maximum
         });
       }).toThrow();
@@ -97,55 +97,55 @@ describe('Ariadne API Integration Tests', () => {
   });
 
   describe('Error Handling System', () => {
-    it('should create and identify AriadneError instances', () => {
-      const error = AriadneError.extractionFailed({ reason: 'test' });
+    it('should create and identify ThreadlineError instances', () => {
+      const error = ThreadlineError.extractionFailed({ reason: 'test' });
 
-      expect(error).toBeInstanceOf(AriadneError);
-      expect(error.code).toBe(AriadneErrorCode.EXTRACTION_FAILED);
+      expect(error).toBeInstanceOf(ThreadlineError);
+      expect(error.code).toBe(ThreadlineErrorCode.EXTRACTION_FAILED);
       expect(error.isOperational).toBe(true);
       expect(error.details).toEqual({ reason: 'test' });
       expect(error.timestamp).toBeInstanceOf(Date);
     });
 
     it('should create specific error types correctly', () => {
-      const workerError = AriadneError.workerError('Worker failed', { workerId: 1 });
-      expect(workerError.code).toBe(AriadneErrorCode.WORKER_ERROR);
+      const workerError = ThreadlineError.workerError('Worker failed', { workerId: 1 });
+      expect(workerError.code).toBe(ThreadlineErrorCode.WORKER_ERROR);
       expect(workerError.message).toContain('Worker failed');
       expect(workerError.details).toEqual({ workerId: 1 });
 
-      const tokenError = AriadneError.tokenLimitExceeded(4000, { actualTokens: 5000 });
-      expect(tokenError.code).toBe(AriadneErrorCode.TOKEN_LIMIT_EXCEEDED);
+      const tokenError = ThreadlineError.tokenLimitExceeded(4000, { actualTokens: 5000 });
+      expect(tokenError.code).toBe(ThreadlineErrorCode.TOKEN_LIMIT_EXCEEDED);
       expect(tokenError.message).toContain('4000');
       expect(tokenError.details?.['limit']).toBe(4000);
       expect(tokenError.details?.['actualTokens']).toBe(5000);
 
-      const domError = AriadneError.domParsingError({ element: 'form' });
-      expect(domError.code).toBe(AriadneErrorCode.DOM_PARSING_ERROR);
+      const domError = ThreadlineError.domParsingError({ element: 'form' });
+      expect(domError.code).toBe(ThreadlineErrorCode.DOM_PARSING_ERROR);
       expect(domError.details).toEqual({ element: 'form' });
 
-      const invalidDocError = AriadneError.invalidDocument({ issue: 'missing body' });
-      expect(invalidDocError.code).toBe(AriadneErrorCode.INVALID_DOCUMENT);
+      const invalidDocError = ThreadlineError.invalidDocument({ issue: 'missing body' });
+      expect(invalidDocError.code).toBe(ThreadlineErrorCode.INVALID_DOCUMENT);
       expect(invalidDocError.details).toEqual({ issue: 'missing body' });
 
-      const timeoutError = AriadneError.processingTimeout(30000, { url: 'test.com' });
-      expect(timeoutError.code).toBe(AriadneErrorCode.PROCESSING_TIMEOUT);
+      const timeoutError = ThreadlineError.processingTimeout(30000, { url: 'test.com' });
+      expect(timeoutError.code).toBe(ThreadlineErrorCode.PROCESSING_TIMEOUT);
       expect(timeoutError.message).toContain('30000ms');
       expect(timeoutError.details?.['timeout']).toBe(30000);
       expect(timeoutError.details?.['url']).toBe('test.com');
     });
 
     it('should provide working type guards', () => {
-      const ariadneError = AriadneError.extractionFailed();
+      const ariadneError = ThreadlineError.extractionFailed();
       const regularError = new Error('Regular error');
-      const tokenError = AriadneError.tokenLimitExceeded(1000);
-      const workerError = AriadneError.workerError('Worker issue');
+      const tokenError = ThreadlineError.tokenLimitExceeded(1000);
+      const workerError = ThreadlineError.workerError('Worker issue');
 
-      // isAriadneError tests
-      expect(isAriadneError(ariadneError)).toBe(true);
-      expect(isAriadneError(tokenError)).toBe(true);
-      expect(isAriadneError(regularError)).toBe(false);
-      expect(isAriadneError(null)).toBe(false);
-      expect(isAriadneError(undefined)).toBe(false);
+      // isThreadlineError tests
+      expect(isThreadlineError(ariadneError)).toBe(true);
+      expect(isThreadlineError(tokenError)).toBe(true);
+      expect(isThreadlineError(regularError)).toBe(false);
+      expect(isThreadlineError(null)).toBe(false);
+      expect(isThreadlineError(undefined)).toBe(false);
 
       // isTokenLimitExceeded tests
       expect(isTokenLimitExceeded(tokenError)).toBe(true);
@@ -159,15 +159,15 @@ describe('Ariadne API Integration Tests', () => {
     });
   });
 
-  describe('Ariadne API', () => {
+  describe('Threadline API', () => {
     it('should create client with default configuration', () => {
       if (typeof Worker === 'undefined') {
         console.warn('⚠️  Skipping Worker-dependent tests');
         return;
       }
 
-      const client = new Ariadne();
-      expect(client).toBeInstanceOf(Ariadne);
+      const client = new Threadline();
+      expect(client).toBeInstanceOf(Threadline);
 
       // Should have methods available
       expect(typeof client.extract).toBe('function');
@@ -180,14 +180,14 @@ describe('Ariadne API Integration Tests', () => {
     it('should create client with custom configuration', () => {
       if (typeof Worker === 'undefined') return;
 
-      const config: AriadneConfiguration = {
+      const config: ThreadlineConfiguration = {
         tokenBudget: 6000,
         includeChildren: false,
         debug: true,
       };
 
-      const client = new Ariadne(config);
-      expect(client).toBeInstanceOf(Ariadne);
+      const client = new Threadline(config);
+      expect(client).toBeInstanceOf(Threadline);
       client.terminate();
     });
 
@@ -195,16 +195,16 @@ describe('Ariadne API Integration Tests', () => {
       if (typeof Worker === 'undefined') return;
 
       expect(() => {
-        new Ariadne({
+        new Threadline({
           tokenBudget: -500, // invalid
-        } as AriadneConfiguration);
-      }).toThrow(AriadneError);
+        } as ThreadlineConfiguration);
+      }).toThrow(ThreadlineError);
     });
 
     it('should handle abort and terminate gracefully', () => {
       if (typeof Worker === 'undefined') return;
 
-      const client = new Ariadne();
+      const client = new Threadline();
 
       // These should not throw
       expect(() => client.abort()).not.toThrow();
@@ -291,9 +291,9 @@ describe('Ariadne API Integration Tests', () => {
     });
 
     it('should integrate SelectorGenerator with caching', async () => {
-      const { AriadneSelectorGenerator } = await import('./worker/selector-generator.js');
+      const { ThreadlineSelectorGenerator } = await import('./worker/selector-generator.js');
 
-      const generator = new AriadneSelectorGenerator();
+      const generator = new ThreadlineSelectorGenerator();
 
       // Mock element with ID
       const mockElement = {
@@ -323,19 +323,19 @@ describe('Ariadne API Integration Tests', () => {
     it('should export all required types', () => {
       // This test verifies that all types are properly exported and importable
       const typeExports = [
-        'AriadneMap',
-        'AriadneElement',
-        'AriadneMeta',
-        'AriadneRole',
-        'AriadneConfig',
-        'AriadneElementState',
+        'ThreadlineMap',
+        'ThreadlineElement',
+        'ThreadlineMeta',
+        'ThreadlineRole',
+        'ThreadlineConfig',
+        'ThreadlineElementState',
       ];
 
       // If the imports work, the types are properly exported
       expect(typeExports.length).toBe(6);
     });
 
-    it('should handle AriadneRole type correctly', async () => {
+    it('should handle ThreadlineRole type correctly', async () => {
       const roles = [
         'form',
         'input',
@@ -356,7 +356,7 @@ describe('Ariadne API Integration Tests', () => {
         'table',
       ];
 
-      // These should all be valid AriadneRole values
+      // These should all be valid ThreadlineRole values
       roles.forEach((role) => {
         expect(typeof role).toBe('string');
         expect(role.length).toBeGreaterThan(0);
@@ -371,11 +371,11 @@ describe('Ariadne API Integration Tests', () => {
       // Import and initialize all core components
       const { IdGenerator } = await import('./worker/id-generator.js');
       const { TokenBudgetManager } = await import('./worker/token-budget.js');
-      const { AriadneSelectorGenerator } = await import('./worker/selector-generator.js');
+      const { ThreadlineSelectorGenerator } = await import('./worker/selector-generator.js');
 
       new IdGenerator();
       new TokenBudgetManager(4000);
-      new AriadneSelectorGenerator();
+      new ThreadlineSelectorGenerator();
 
       const endTime = Date.now();
 
@@ -385,10 +385,10 @@ describe('Ariadne API Integration Tests', () => {
 
     it('should handle cache clearing efficiently', async () => {
       const { IdGenerator } = await import('./worker/id-generator.js');
-      const { AriadneSelectorGenerator } = await import('./worker/selector-generator.js');
+      const { ThreadlineSelectorGenerator } = await import('./worker/selector-generator.js');
 
       const idGen = new IdGenerator();
-      const selGen = new AriadneSelectorGenerator();
+      const selGen = new ThreadlineSelectorGenerator();
 
       // Generate some cached data
       const mockElement = { tagName: 'DIV' } as Element;

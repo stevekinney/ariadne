@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 /**
- * Build script for Ariadne
+ * Build script for Threadline
  * Handles bundling and type generation
  */
 import { mkdir, rm } from 'node:fs/promises';
@@ -48,7 +48,7 @@ async function buildWorker() {
   console.log('👷 Building Web Worker...');
 
   const result = await Bun.build({
-    entrypoints: [join(srcDir, 'ariadne.worker.ts')],
+    entrypoints: [join(srcDir, 'threadline.worker.ts')],
     outdir: distDir,
     target: 'browser',
     format: 'iife',
@@ -183,7 +183,7 @@ async function createPackageJson() {
 
 // Main build process
 async function build() {
-  console.log('🏗️  Building Ariadne...\n');
+  console.log('🏗️  Building Threadline...\n');
 
   const startTime = performance.now();
 
