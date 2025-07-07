@@ -123,7 +123,7 @@ export default [
     languageOptions: {
       parser: tseslintParser,
       parserOptions: {
-        project: ['./tsconfig.json'],
+        project: ['./tsconfig.eslint.json'],
       },
     },
     plugins: {
@@ -134,7 +134,7 @@ export default [
 
   // Test file overrides
   {
-    files: [testFiles],
+    files: [testFiles, 'src/test-setup.ts'],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
     },

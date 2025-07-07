@@ -493,12 +493,34 @@ export class Ariadne {
 
       const messageHandler = (event: MessageEvent<AriadneWorkerResponse>) => {
         if (isResolved) return;
-        isResolved = true;
         cleanup();
 
         if (event.data?.type === 'success' && event.data.data) {
+          isResolved = true;
           resolve(event.data.data);
+        } else if (event.data?.error === 'DOMPARSER_UNAVAILABLE') {
+          // DOMParser not available in worker - fall back to main thread processing
+          if (this.config.debug) {
+            console.warn('[Ariadne] DOMParser unavailable in Web Worker, falling back to main thread processing');
+          }
+          // Don't mark as resolved yet - we're trying fallback
+          this.extractInMainThread(request)
+            .then(fallbackResult => {
+              if (!isResolved) {
+                isResolved = true;
+                resolve(fallbackResult);
+              }
+            })
+            .catch(fallbackError => {
+              if (!isResolved) {
+                isResolved = true;
+                reject(AriadneError.workerError(
+                  `Web Worker failed and main thread fallback failed: ${fallbackError instanceof Error ? fallbackError.message : 'Unknown error'}`
+                ));
+              }
+            });
         } else {
+          isResolved = true;
           reject(AriadneError.workerError(event.data?.error || 'Unknown worker error'));
         }
       };
@@ -565,6 +587,26 @@ export class Ariadne {
         );
       }
     });
+  }
+
+  /**
+   * Fallback method to extract semantic map in main thread when Web Worker fails
+   */
+  private async extractInMainThread(request: AriadneWorkerRequest): Promise<AriadneMap> {
+    // Parse the HTML string into a document
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(request.html, 'text/html');
+
+    // Check for parser errors
+    const parserError = doc.querySelector('parsererror');
+    if (parserError) {
+      throw new Error('Failed to parse HTML: ' + parserError.textContent);
+    }
+
+    // Import and create processor
+    const { DomProcessor } = await import('./worker/dom-processor.js');
+    const processor = new DomProcessor(doc, request.metadata, this.config);
+    return processor.generateMap();
   }
 
   /**

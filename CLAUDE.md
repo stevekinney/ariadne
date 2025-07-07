@@ -15,11 +15,18 @@ bun run start             # Run production build
 ### Testing
 
 ```bash
-bun test                  # Run all tests
+# Unit Tests (Bun)
+bun test                  # Run all unit tests
 bun test src/utils        # Run tests in specific directory
 bun test logger          # Run tests matching pattern
 bun test --watch         # Watch mode
 bun test --coverage      # Generate coverage report
+
+# Browser Tests (Playwright)
+bun run test:browser      # Run browser tests in all browsers
+bun run test:browser:headed # Run browser tests with visible browser
+bun run test:browser:debug   # Run browser tests in debug mode
+bun run test:browser:ui      # Run browser tests with Playwright UI
 ```
 
 ### Code Quality
@@ -86,10 +93,39 @@ The codebase includes advanced TypeScript utility types in `src/types/common.ts`
 
 ### Testing Approach
 
+#### Unit Tests
+
 - Tests use Bun's built-in test runner with `describe`, `it`, `expect`
 - Test files are colocated with source files using `.test.ts` suffix
 - Use test helpers from `src/test/helpers/` for common patterns
 - Benchmarking available via `compareBenchmarks()` function
+
+#### Browser Tests (Playwright)
+
+- Browser tests are located in `tests/end-to-end/` directory
+- Tests verify DOM extraction functionality in real browser environments
+- Test fixtures provide complex HTML documents for comprehensive testing
+- Tests cover:
+  - Basic DOM extraction (forms, links, buttons, tables, lists)
+  - Web Worker functionality and communication
+  - Error handling and edge cases (malformed HTML, special characters)
+  - Performance and memory usage across browsers
+  - Cross-browser compatibility (Chromium, Firefox, WebKit)
+
+#### Test Structure
+
+```
+tests/end-to-end/
+├── fixtures/           # HTML test documents
+│   ├── test-page.html     # Basic test page with common elements
+│   ├── complex-form.html  # Multi-section form with all input types
+│   └── edge-cases.html    # Edge cases and malformed content
+├── basic-extraction.spec.ts    # Core DOM extraction tests
+├── complex-form.spec.ts        # Advanced form handling tests
+├── worker.spec.ts              # Web Worker functionality tests
+├── error-handling.spec.ts      # Error scenarios and edge cases
+└── performance.spec.ts         # Performance and memory tests
+```
 
 ### Import Organization
 

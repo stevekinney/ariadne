@@ -1414,12 +1414,3 @@ We welcome contributions! Please see the project repository for contribution gui
 ## 📄 License
 
 MIT License - see [LICENSE](LICENSE) for details.
-
----
-
-**📞 Need Help?**
-
-- 📖 Check the README.md for comprehensive documentation
-- 💬 Use GitHub Discussions for questions and community support
-- 🐛 Report Issues through the GitHub Issues tracker
-- 📧 Contact the maintainers through the project repository

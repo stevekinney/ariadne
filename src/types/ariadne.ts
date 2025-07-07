@@ -181,6 +181,7 @@ export interface AriadneWorkerRequest {
 
 export interface AriadneWorkerResponse {
   type: 'success' | 'error';
+  code?: string;
   data?: AriadneMap;
   error?: string;
 }
@@ -248,7 +249,10 @@ export const AriadneConfigurationSchema = z
 export const DocumentSchema = z.custom<Document>(
   (value) => {
     return (
-      value instanceof Document &&
+      (value instanceof Document || 
+       (typeof value === 'object' && 
+        value !== null && 
+        value.constructor?.name === 'HTMLDocument')) &&
       value.documentElement !== null &&
       value.location !== null
     );

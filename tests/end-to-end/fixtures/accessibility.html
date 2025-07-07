@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessibility Test - Ariadne</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .section {
+            margin: 2rem 0;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        .section h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.5rem;
+        }
+        .form-group {
+            margin: 1rem 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: 2px solid #007bff;
+            outline-offset: 2px;
+        }
+        button {
+            padding: 0.75rem 1.5rem;
+            margin: 0.25rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .primary-btn {
+            background: #007bff;
+            color: white;
+        }
+        .secondary-btn {
+            background: #6c757d;
+            color: white;
+        }
+        .danger-btn {
+            background: #dc3545;
+            color: white;
+        }
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        fieldset {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        legend {
+            padding: 0 0.5rem;
+            font-weight: bold;
+        }
+        .error {
+            color: #dc3545;
+            font-size: 0.875rem;
+        }
+        .required {
+            color: #dc3545;
+        }
+        #output {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.875rem;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Accessibility Features Test</h1>
+        <p>Testing Ariadne's ability to extract accessibility information from semantic HTML.</p>
+    </header>
+    
+    <main>
+        <section class="section">
+            <h2>ARIA Labels and Descriptions</h2>
+            <form id="aria-form">
+                <div class="form-group">
+                    <label for="search-input">Search</label>
+                    <input 
+                        type="search" 
+                        id="search-input" 
+                        name="search"
+                        aria-label="Search products in our catalog"
+                        aria-describedby="search-help"
+                        placeholder="Enter search terms">
+                    <div id="search-help" class="sr-only">
+                        Search through our product catalog. Use keywords to find what you're looking for.
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="user-input">
+                        Username <span class="required" aria-label="required">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="user-input" 
+                        name="username"
+                        aria-required="true"
+                        aria-describedby="username-error"
+                        required>
+                    <div id="username-error" class="error" aria-live="polite" style="display: none;">
+                        Username is required and must be at least 3 characters.
+                    </div>
+                </div>
+                
+                <button type="submit" aria-describedby="submit-help">Submit Form</button>
+                <div id="submit-help" class="sr-only">
+                    Submits the form after validating all required fields.
+                </div>
+            </form>
+        </section>
+        
+        <section class="section">
+            <h2>Fieldsets and Radio Groups</h2>
+            <form id="fieldset-form">
+                <fieldset>
+                    <legend>Preferred Contact Method <span class="required">*</span></legend>
+                    <div>
+                        <input type="radio" id="contact-email" name="contact" value="email" required>
+                        <label for="contact-email">Email</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="contact-phone" name="contact" value="phone" required>
+                        <label for="contact-phone">Phone</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="contact-mail" name="contact" value="mail" required>
+                        <label for="contact-mail">Postal Mail</label>
+                    </div>
+                </fieldset>
+                
+                <fieldset>
+                    <legend>Notification Preferences</legend>
+                    <div>
+                        <input type="checkbox" id="news-updates" name="notifications" value="news">
+                        <label for="news-updates">News and Updates</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="product-updates" name="notifications" value="products">
+                        <label for="product-updates">Product Updates</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="security-alerts" name="notifications" value="security">
+                        <label for="security-alerts">Security Alerts</label>
+                    </div>
+                </fieldset>
+                
+                <button type="submit">Save Preferences</button>
+            </form>
+        </section>
+        
+        <section class="section">
+            <h2>Complex Form Controls</h2>
+            <form id="complex-form">
+                <div class="form-group">
+                    <label for="date-picker">
+                        Appointment Date
+                        <span class="required" aria-label="required">*</span>
+                    </label>
+                    <input 
+                        type="date" 
+                        id="date-picker" 
+                        name="appointment_date"
+                        aria-required="true"
+                        aria-describedby="date-help"
+                        min="2025-01-01"
+                        max="2025-12-31"
+                        required>
+                    <div id="date-help">
+                        Please select a date between January 1st and December 31st, 2025.
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="time-picker">Preferred Time</label>
+                    <input 
+                        type="time" 
+                        id="time-picker" 
+                        name="appointment_time"
+                        aria-describedby="time-help"
+                        min="09:00"
+                        max="17:00"
+                        step="1800">
+                    <div id="time-help">
+                        Select a time between 9:00 AM and 5:00 PM in 30-minute intervals.
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="file-upload">Upload Document</label>
+                    <input 
+                        type="file" 
+                        id="file-upload" 
+                        name="document"
+                        aria-describedby="file-help"
+                        accept=".pdf,.doc,.docx"
+                        multiple>
+                    <div id="file-help">
+                        Upload PDF or Word documents. Multiple files allowed.
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="range-slider">
+                        Budget Range: $<span id="budget-value" aria-live="polite">5000</span>
+                    </label>
+                    <input 
+                        type="range" 
+                        id="range-slider" 
+                        name="budget"
+                        aria-describedby="range-help"
+                        min="1000"
+                        max="10000"
+                        step="500"
+                        value="5000"
+                        oninput="document.getElementById('budget-value').textContent = this.value">
+                    <div id="range-help">
+                        Adjust the slider to set your budget between $1,000 and $10,000.
+                    </div>
+                </div>
+                
+                <button type="submit" class="primary-btn">Book Appointment</button>
+                <button type="reset" class="secondary-btn">Clear Form</button>
+            </form>
+        </section>
+        
+        <section class="section">
+            <h2>Live Regions and Dynamic Content</h2>
+            <div>
+                <button id="status-btn" class="primary-btn" onclick="updateStatus()">
+                    Check Status
+                </button>
+                <button id="error-btn" class="danger-btn" onclick="showError()">
+                    Trigger Error
+                </button>
+                <button id="clear-btn" class="secondary-btn" onclick="clearMessages()">
+                    Clear Messages
+                </button>
+            </div>
+            
+            <div id="status-region" aria-live="polite" aria-label="Status updates">
+                <!-- Dynamic status messages appear here -->
+            </div>
+            
+            <div id="error-region" aria-live="assertive" aria-label="Error messages">
+                <!-- Dynamic error messages appear here -->
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>Navigation and Landmarks</h2>
+            <nav aria-label="Main navigation">
+                <ul>
+                    <li><a href="#home" aria-current="page">Home</a></li>
+                    <li><a href="#products">Products</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            
+            <nav aria-label="Breadcrumb">
+                <ol>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#category">Category</a></li>
+                    <li aria-current="page">Current Page</li>
+                </ol>
+            </nav>
+        </section>
+        
+        <section class="section">
+            <h2>Data Tables with Headers</h2>
+            <table role="table" aria-label="Employee information">
+                <caption>Employee List - Q4 2024</caption>
+                <thead>
+                    <tr>
+                        <th scope="col" id="emp-name">Employee Name</th>
+                        <th scope="col" id="emp-dept">Department</th>
+                        <th scope="col" id="emp-role">Role</th>
+                        <th scope="col" id="emp-salary">Salary</th>
+                        <th scope="col" id="emp-actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row" headers="emp-name">John Smith</th>
+                        <td headers="emp-dept">Engineering</td>
+                        <td headers="emp-role">Senior Developer</td>
+                        <td headers="emp-salary">$95,000</td>
+                        <td headers="emp-actions">
+                            <button aria-label="Edit John Smith's information">Edit</button>
+                            <button aria-label="Delete John Smith's record">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" headers="emp-name">Jane Doe</th>
+                        <td headers="emp-dept">Marketing</td>
+                        <td headers="emp-role">Marketing Manager</td>
+                        <td headers="emp-salary">$85,000</td>
+                        <td headers="emp-actions">
+                            <button aria-label="Edit Jane Doe's information">Edit</button>
+                            <button aria-label="Delete Jane Doe's record">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    
+    <aside class="section" role="complementary" aria-label="Additional information">
+        <h2>Help and Support</h2>
+        <p>If you need assistance with this form, please contact our support team.</p>
+        <button aria-describedby="help-desc">Get Help</button>
+        <div id="help-desc" class="sr-only">
+            Opens a new window with our help documentation.
+        </div>
+    </aside>
+    
+    <div id="output"></div>
+    
+    <script type="module">
+        import { extractSemanticMap } from '/dist/index.js';
+        
+        // Dynamic content functions
+        window.updateStatus = function() {
+            const statusRegion = document.getElementById('status-region');
+            statusRegion.textContent = `Status updated at ${new Date().toLocaleTimeString()}`;
+        };
+        
+        window.showError = function() {
+            const errorRegion = document.getElementById('error-region');
+            errorRegion.textContent = 'Error: Something went wrong. Please try again.';
+        };
+        
+        window.clearMessages = function() {
+            document.getElementById('status-region').textContent = '';
+            document.getElementById('error-region').textContent = '';
+        };
+        
+        async function runAccessibilityTest() {
+            const output = document.getElementById('output');
+            output.textContent = 'Running accessibility extraction test...\\n';
+            
+            try {
+                const result = await extractSemanticMap(document, {
+                    tokenBudget: 8000,
+                    includeChildren: true,
+                    debug: true
+                });
+                
+                output.textContent += 'Extraction completed successfully!\\n\\n';
+                output.textContent += `Total elements: ${result.elements.length}\\n`;
+                
+                // Analyze accessibility features
+                const ariaLabels = result.elements.filter(el => 
+                    el.attributes && (el.attributes['aria-label'] || el.attributes['aria-labelledby'])
+                ).length;
+                
+                const ariaDescriptions = result.elements.filter(el => 
+                    el.attributes && (el.attributes['aria-describedby'] || el.attributes['aria-description'])
+                ).length;
+                
+                const requiredFields = result.elements.filter(el => 
+                    el.attributes && (el.attributes['aria-required'] === 'true' || el.attributes.required !== undefined)
+                ).length;
+                
+                const liveRegions = result.elements.filter(el => 
+                    el.attributes && el.attributes['aria-live']
+                ).length;
+                
+                const landmarks = result.elements.filter(el => 
+                    ['nav', 'main', 'aside', 'header', 'footer'].includes(el.role) ||
+                    (el.attributes && el.attributes.role && 
+                     ['navigation', 'main', 'complementary', 'banner', 'contentinfo'].includes(el.attributes.role))
+                ).length;
+                
+                const tablesWithHeaders = result.elements.filter(el => 
+                    el.role === 'table' || (el.attributes && el.attributes.role === 'table')
+                ).length;
+                
+                output.textContent += '\\nAccessibility Analysis:\\n';
+                output.textContent += `Elements with ARIA labels: ${ariaLabels}\\n`;
+                output.textContent += `Elements with ARIA descriptions: ${ariaDescriptions}\\n`;
+                output.textContent += `Required fields: ${requiredFields}\\n`;
+                output.textContent += `Live regions: ${liveRegions}\\n`;
+                output.textContent += `Landmark elements: ${landmarks}\\n`;
+                output.textContent += `Tables with headers: ${tablesWithHeaders}\\n`;
+                
+                // Store for Playwright tests
+                window.ariadneResult = result;
+                window.accessibilityStats = {
+                    ariaLabels,
+                    ariaDescriptions,
+                    requiredFields,
+                    liveRegions,
+                    landmarks,
+                    tablesWithHeaders
+                };
+                
+            } catch (error) {
+                output.textContent += `\\nError: ${error.message}\\n`;
+                window.ariadneError = error;
+            }
+        }
+        
+        window.addEventListener('load', runAccessibilityTest);
+        
+        // Prevent form submissions
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                console.log(`Form ${form.id} submission prevented`);
+            });
+        });
+    </script>
+</body>
+</html>

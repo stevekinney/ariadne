@@ -94,6 +94,8 @@ local.env
 
 # Test output
 test-output/
+test-results/
+playwright-report/
 
 # Repomix summary
 repomix-output.xml

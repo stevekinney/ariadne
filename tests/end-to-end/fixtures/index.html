@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ariadne Browser Test Suite</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 0.5rem;
+        }
+        .test-list {
+            list-style: none;
+            padding: 0;
+        }
+        .test-list li {
+            margin: 1rem 0;
+        }
+        .test-list a {
+            display: block;
+            padding: 1rem;
+            background: #f5f5f5;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            transition: background 0.2s;
+        }
+        .test-list a:hover {
+            background: #e8e8e8;
+        }
+        .test-list .description {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ariadne Browser Test Suite</h1>
+    <p>This page lists all available test fixtures for the Ariadne semantic HTML extraction library.</p>
+    
+    <ul class="test-list">
+        <li>
+            <a href="/simple-form.html">
+                <strong>Simple Form Test</strong>
+                <div class="description">Basic form with various input types</div>
+            </a>
+        </li>
+        <li>
+            <a href="/complex-layout.html">
+                <strong>Complex Layout Test</strong>
+                <div class="description">Tests extraction from complex nested structures</div>
+            </a>
+        </li>
+        <li>
+            <a href="/large-document.html">
+                <strong>Large Document Test</strong>
+                <div class="description">Tests token budget limits and performance</div>
+            </a>
+        </li>
+        <li>
+            <a href="/dynamic-content.html">
+                <strong>Dynamic Content Test</strong>
+                <div class="description">Tests detection of lazy loading and infinite scroll</div>
+            </a>
+        </li>
+        <li>
+            <a href="/iframe-test.html">
+                <strong>IFrame Test</strong>
+                <div class="description">Tests cross-origin iframe handling</div>
+            </a>
+        </li>
+        <li>
+            <a href="/accessibility.html">
+                <strong>Accessibility Test</strong>
+                <div class="description">Tests extraction of ARIA labels and accessibility features</div>
+            </a>
+        </li>
+        <li>
+            <a href="/edge-cases.html">
+                <strong>Edge Cases Test</strong>
+                <div class="description">Tests handling of malformed HTML and edge cases</div>
+            </a>
+        </li>
+    </ul>
+</body>
+</html>

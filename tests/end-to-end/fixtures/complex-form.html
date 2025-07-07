@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complex Form Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin: 10px 0;
+        }
+        .form-group {
+            flex: 1;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .checkbox-group, .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .checkbox-item, .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .checkbox-item input, .radio-item input {
+            width: auto;
+        }
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button-group button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .primary { background-color: #007bff; color: white; }
+        .secondary { background-color: #6c757d; color: white; }
+        .danger { background-color: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+    <h1>Complex Multi-Section Form</h1>
+    
+    <form id="complex-form" action="/submit-complex" method="POST" enctype="multipart/form-data">
+        
+        <!-- Personal Information Section -->
+        <div class="form-section">
+            <h2>Personal Information</h2>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="first-name">First Name *</label>
+                    <input type="text" id="first-name" name="firstName" required placeholder="John">
+                </div>
+                <div class="form-group">
+                    <label for="last-name">Last Name *</label>
+                    <input type="text" id="last-name" name="lastName" required placeholder="Doe">
+                </div>
+                <div class="form-group">
+                    <label for="middle-name">Middle Name</label>
+                    <input type="text" id="middle-name" name="middleName" placeholder="Optional">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="date-of-birth">Date of Birth</label>
+                    <input type="date" id="date-of-birth" name="dateOfBirth">
+                </div>
+                <div class="form-group">
+                    <label for="ssn">Social Security Number</label>
+                    <input type="text" id="ssn" name="ssn" pattern="[0-9]{3}-[0-9]{2}-[0-9]{4}" placeholder="123-45-6789">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Gender</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="gender-male" name="gender" value="male">
+                        <label for="gender-male">Male</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="gender-female" name="gender" value="female">
+                        <label for="gender-female">Female</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="gender-other" name="gender" value="other">
+                        <label for="gender-other">Other</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="gender-prefer-not" name="gender" value="prefer-not-to-say">
+                        <label for="gender-prefer-not">Prefer not to say</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Information Section -->
+        <div class="form-section">
+            <h2>Contact Information</h2>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="email-primary">Primary Email *</label>
+                    <input type="email" id="email-primary" name="emailPrimary" required placeholder="john@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="email-secondary">Secondary Email</label>
+                    <input type="email" id="email-secondary" name="emailSecondary" placeholder="john.doe@work.com">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="phone-home">Home Phone</label>
+                    <input type="tel" id="phone-home" name="phoneHome" placeholder="(555) 123-4567">
+                </div>
+                <div class="form-group">
+                    <label for="phone-mobile">Mobile Phone *</label>
+                    <input type="tel" id="phone-mobile" name="phoneMobile" required placeholder="(555) 987-6543">
+                </div>
+                <div class="form-group">
+                    <label for="phone-work">Work Phone</label>
+                    <input type="tel" id="phone-work" name="phoneWork" placeholder="(555) 456-7890">
+                </div>
+            </div>
+        </div>
+
+        <!-- Address Information Section -->
+        <div class="form-section">
+            <h2>Address Information</h2>
+            
+            <div class="form-group">
+                <label for="address-line1">Address Line 1 *</label>
+                <input type="text" id="address-line1" name="addressLine1" required placeholder="123 Main Street">
+            </div>
+            
+            <div class="form-group">
+                <label for="address-line2">Address Line 2</label>
+                <input type="text" id="address-line2" name="addressLine2" placeholder="Apt 4B">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="city">City *</label>
+                    <input type="text" id="city" name="city" required placeholder="New York">
+                </div>
+                <div class="form-group">
+                    <label for="state">State *</label>
+                    <select id="state" name="state" required>
+                        <option value="">Select State</option>
+                        <option value="AL">Alabama</option>
+                        <option value="AK">Alaska</option>
+                        <option value="AZ">Arizona</option>
+                        <option value="CA">California</option>
+                        <option value="FL">Florida</option>
+                        <option value="NY">New York</option>
+                        <option value="TX">Texas</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="zip">ZIP Code *</label>
+                    <input type="text" id="zip" name="zip" required pattern="[0-9]{5}(-[0-9]{4})?" placeholder="12345">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="country">Country</label>
+                <select id="country" name="country">
+                    <option value="US" selected>United States</option>
+                    <option value="CA">Canada</option>
+                    <option value="MX">Mexico</option>
+                    <option value="UK">United Kingdom</option>
+                    <option value="DE">Germany</option>
+                    <option value="FR">France</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Employment Information Section -->
+        <div class="form-section">
+            <h2>Employment Information</h2>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="employer">Employer</label>
+                    <input type="text" id="employer" name="employer" placeholder="Company Name">
+                </div>
+                <div class="form-group">
+                    <label for="job-title">Job Title</label>
+                    <input type="text" id="job-title" name="jobTitle" placeholder="Software Engineer">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="employment-status">Employment Status</label>
+                    <select id="employment-status" name="employmentStatus">
+                        <option value="">Select Status</option>
+                        <option value="full-time">Full-time</option>
+                        <option value="part-time">Part-time</option>
+                        <option value="contract">Contract</option>
+                        <option value="unemployed">Unemployed</option>
+                        <option value="retired">Retired</option>
+                        <option value="student">Student</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="annual-income">Annual Income</label>
+                    <select id="annual-income" name="annualIncome">
+                        <option value="">Select Range</option>
+                        <option value="under-25k">Under $25,000</option>
+                        <option value="25k-50k">$25,000 - $50,000</option>
+                        <option value="50k-75k">$50,000 - $75,000</option>
+                        <option value="75k-100k">$75,000 - $100,000</option>
+                        <option value="100k-150k">$100,000 - $150,000</option>
+                        <option value="over-150k">Over $150,000</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preferences Section -->
+        <div class="form-section">
+            <h2>Preferences & Interests</h2>
+            
+            <div class="form-group">
+                <label>Interests (select all that apply)</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="interest-tech" name="interests" value="technology">
+                        <label for="interest-tech">Technology</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="interest-sports" name="interests" value="sports">
+                        <label for="interest-sports">Sports</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="interest-music" name="interests" value="music">
+                        <label for="interest-music">Music</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="interest-travel" name="interests" value="travel">
+                        <label for="interest-travel">Travel</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="interest-food" name="interests" value="food">
+                        <label for="interest-food">Food</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="interest-books" name="interests" value="books">
+                        <label for="interest-books">Books</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="communication-method">Preferred Communication Method</label>
+                <select id="communication-method" name="communicationMethod" multiple size="4">
+                    <option value="email">Email</option>
+                    <option value="phone">Phone</option>
+                    <option value="sms">SMS/Text</option>
+                    <option value="mail">Physical Mail</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="comments">Additional Comments</label>
+                <textarea id="comments" name="comments" rows="4" placeholder="Please share any additional information or comments..."></textarea>
+            </div>
+        </div>
+
+        <!-- File Upload Section -->
+        <div class="form-section">
+            <h2>Document Upload</h2>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="profile-photo">Profile Photo</label>
+                    <input type="file" id="profile-photo" name="profilePhoto" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label for="resume">Resume</label>
+                    <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="additional-docs">Additional Documents</label>
+                <input type="file" id="additional-docs" name="additionalDocs" multiple>
+            </div>
+        </div>
+
+        <!-- Terms and Conditions Section -->
+        <div class="form-section">
+            <h2>Terms and Conditions</h2>
+            
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="terms-agree" name="termsAgree" required>
+                    <label for="terms-agree">I agree to the Terms and Conditions *</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="privacy-agree" name="privacyAgree" required>
+                    <label for="privacy-agree">I agree to the Privacy Policy *</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="newsletter-subscribe" name="newsletterSubscribe">
+                    <label for="newsletter-subscribe">Subscribe to our newsletter</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="marketing-emails" name="marketingEmails">
+                    <label for="marketing-emails">Receive marketing emails</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Section -->
+        <div class="button-group">
+            <button type="submit" class="primary" id="submit-form">Submit Application</button>
+            <button type="button" class="secondary" id="save-draft">Save as Draft</button>
+            <button type="reset" class="secondary" id="reset-form">Clear Form</button>
+            <button type="button" class="danger" id="cancel-form">Cancel</button>
+        </div>
+    </form>
+
+    <script>
+        document.getElementById('save-draft').addEventListener('click', function() {
+            console.log('Saving form as draft...');
+        });
+        
+        document.getElementById('cancel-form').addEventListener('click', function() {
+            if (confirm('Are you sure you want to cancel? All changes will be lost.')) {
+                window.location.href = '/';
+            }
+        });
+        
+        // Form validation feedback
+        document.getElementById('complex-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Form submitted');
+            alert('Form submitted successfully!');
+        });
+    </script>
+</body>
+</html>

@@ -41,13 +41,29 @@ self.onmessage = async (event: MessageEvent) => {
     }
 
     // Parse HTML safely in the worker context with error handling
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
+    let doc: Document;
+    try {
+      if (typeof DOMParser === 'undefined') {
+        throw new Error('DOMParser not available in Web Worker');
+      }
+      const parser = new DOMParser();
+      doc = parser.parseFromString(html, 'text/html');
 
-    // Check for parser errors
-    const parserError = doc.querySelector('parsererror');
-    if (parserError) {
-      throw new Error('Failed to parse HTML: ' + parserError.textContent);
+      // Check for parser errors
+      const parserError = doc.querySelector('parsererror');
+      if (parserError) {
+        throw new Error('Failed to parse HTML: ' + parserError.textContent);
+      }
+    } catch {
+      // DOMParser not available in this Web Worker environment
+      // Signal to main thread that fallback is needed
+      const response: AriadneWorkerResponse = {
+        type: 'error',
+        error: 'DOMPARSER_UNAVAILABLE',
+        code: 'DOMPARSER_UNAVAILABLE',
+      };
+      self.postMessage(response);
+      return;
     }
 
     // Create processor and track it for cleanup

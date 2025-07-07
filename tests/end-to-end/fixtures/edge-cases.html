@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edge Cases Test Page</title>
+    <style>
+        .invisible { visibility: hidden; }
+        .zero-size { width: 0; height: 0; overflow: hidden; }
+        .deeply-nested { /* Intentionally deep nesting */ }
+    </style>
+</head>
+<body>
+    <!-- Empty elements -->
+    <div></div>
+    <span></span>
+    <p></p>
+    <form></form>
+    <table></table>
+    
+    <!-- Elements with only whitespace -->
+    <div>   </div>
+    <span>
+    
+    </span>
+    <p>	</p>
+    
+    <!-- Elements with special characters -->
+    <div>Special chars: &lt;&gt;&amp;&quot;&#39;</div>
+    <p>Unicode: 🚀 ✨ 🎉 中文 العربية русский</p>
+    <span>Math: ∑ ∫ √ π ∞ ≠ ≤ ≥</span>
+    
+    <!-- Very long content -->
+    <div id="long-content">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+    </div>
+    
+    <!-- Invisible elements -->
+    <div style="display: none;">Hidden with display none</div>
+    <span class="invisible">Hidden with visibility</span>
+    <p class="zero-size">Hidden with zero size</p>
+    
+    <!-- Deeply nested structure -->
+    <div class="deeply-nested">
+        <div><div><div><div><div><div><div><div><div><div>
+            <span>Deeply nested content</span>
+        </div></div></div></div></div></div></div></div></div></div>
+    </div>
+    
+    <!-- Invalid/malformed elements -->
+    <button>Button without type</button>
+    <input name="no-type">
+    <select name="empty-select"></select>
+    <textarea name="no-attrs"></textarea>
+    
+    <!-- Elements with unusual attributes -->
+    <input type="text" data-custom="value" x-special="test" ng-model="something">
+    <button onclick="javascript:void(0)" data-action="complex-action">JS Button</button>
+    <a href="javascript:void(0)">JS Link</a>
+    <a href="#">Hash Link</a>
+    <a href="">Empty Link</a>
+    <a>No href</a>
+    
+    <!-- Form with edge cases -->
+    <form id="edge-case-form">
+        <!-- Input without name -->
+        <input type="text" value="no name">
+        
+        <!-- Multiple inputs with same name -->
+        <input type="radio" name="same" value="1">
+        <input type="radio" name="same" value="2">
+        <input type="radio" name="same" value="3">
+        
+        <!-- Input with no value -->
+        <input type="text" name="no-value">
+        
+        <!-- Select with no options -->
+        <select name="no-options"></select>
+        
+        <!-- Select with disabled options -->
+        <select name="disabled-options">
+            <option value="1">Option 1</option>
+            <option value="2" disabled>Disabled Option</option>
+            <option value="3">Option 3</option>
+        </select>
+        
+        <!-- Textarea with predefined content -->
+        <textarea name="with-content">Existing content here</textarea>
+        
+        <!-- File input with multiple accepts -->
+        <input type="file" name="multi-accept" accept="image/*,video/*,.pdf,.doc">
+        
+        <!-- Range input -->
+        <input type="range" name="range" min="0" max="100" step="5" value="50">
+        
+        <!-- Color input -->
+        <input type="color" name="color" value="#ff0000">
+        
+        <!-- Date/time inputs -->
+        <input type="date" name="date">
+        <input type="time" name="time">
+        <input type="datetime-local" name="datetime">
+        <input type="month" name="month">
+        <input type="week" name="week">
+        
+        <!-- Button elements vs input buttons -->
+        <button type="submit">Button Submit</button>
+        <input type="submit" value="Input Submit">
+        <button type="button">Button Button</button>
+        <input type="button" value="Input Button">
+    </form>
+    
+    <!-- Table edge cases -->
+    <table id="edge-table">
+        <!-- Empty table -->
+    </table>
+    
+    <table id="malformed-table">
+        <tr>
+            <td>Cell without header</td>
+            <td>Another cell</td>
+        </tr>
+        <!-- Missing closing tags intentionally -->
+        <tr>
+            <td>Incomplete row
+        </tr>
+    </table>
+    
+    <table id="complex-table">
+        <thead>
+            <tr>
+                <th rowspan="2">Rowspan Header</th>
+                <th colspan="2">Colspan Header</th>
+            </tr>
+            <tr>
+                <th>Sub 1</th>
+                <th>Sub 2</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Data 1</td>
+                <td>Data 2</td>
+                <td>Data 3</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Lists edge cases -->
+    <ul>
+        <!-- Empty list -->
+    </ul>
+    
+    <ol>
+        <li></li> <!-- Empty list item -->
+        <li>   </li> <!-- Whitespace only -->
+        <li>Normal item</li>
+    </ol>
+    
+    <ul>
+        <li>
+            Nested lists
+            <ul>
+                <li>Nested item 1</li>
+                <li>
+                    <ul>
+                        <li>Double nested</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    
+    <!-- Custom elements -->
+    <custom-element>Custom content</custom-element>
+    <web-component data-prop="value">Web component</web-component>
+    
+    <!-- Comments and processing instructions -->
+    <!-- This is a comment -->
+    <?xml version="1.0"?>
+    
+    <!-- Script and style content -->
+    <script>
+        // JavaScript code that might interfere
+        var maliciousCode = "alert('test')";
+        function doSomething() {
+            return false;
+        }
+    </script>
+    
+    <style>
+        /* CSS that might interfere */
+        .hidden { display: none !important; }
+    </style>
+    
+    <!-- SVG content -->
+    <svg width="100" height="100">
+        <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
+        <text x="50" y="50" text-anchor="middle">SVG Text</text>
+    </svg>
+    
+    <!-- MathML content -->
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+        <mrow>
+            <mi>x</mi>
+            <mo>=</mo>
+            <mfrac>
+                <mrow>
+                    <mo>-</mo>
+                    <mi>b</mi>
+                    <mo>±</mo>
+                    <msqrt>
+                        <mrow>
+                            <msup>
+                                <mi>b</mi>
+                                <mn>2</mn>
+                            </msup>
+                            <mo>-</mo>
+                            <mn>4</mn>
+                            <mi>a</mi>
+                            <mi>c</mi>
+                        </mrow>
+                    </msqrt>
+                </mrow>
+                <mrow>
+                    <mn>2</mn>
+                    <mi>a</mi>
+                </mrow>
+            </mfrac>
+        </mrow>
+    </math>
+    
+    <!-- Large amounts of content for performance testing -->
+    <div id="performance-test">
+        <script>
+            // Generate lots of elements dynamically
+            for (let i = 0; i < 1000; i++) {
+                const div = document.createElement('div');
+                div.textContent = 'Generated element ' + i;
+                div.className = 'generated-element';
+                div.setAttribute('data-index', i);
+                document.getElementById('performance-test').appendChild(div);
+            }
+        </script>
+    </div>
+</body>
+</html>

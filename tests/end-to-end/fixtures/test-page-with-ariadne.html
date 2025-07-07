@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ariadne Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ariadne DOM Extraction Test Page</h1>
+    
+    <div class="section">
+        <h2>Navigation</h2>
+        <nav>
+            <a href="/home" id="home-link">Home</a>
+            <a href="/about" id="about-link">About</a>
+            <a href="/contact" id="contact-link">Contact</a>
+            <a href="mailto:test@example.com" id="email-link">Email Us</a>
+            <a href="tel:+1234567890" id="phone-link">Call Us</a>
+        </nav>
+    </div>
+
+    <div class="section">
+        <h2>Form Elements</h2>
+        <form id="test-form" action="/submit" method="POST">
+            <div>
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required placeholder="Enter your name">
+            </div>
+            
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email">
+            </div>
+            
+            <div>
+                <label for="age">Age:</label>
+                <input type="number" id="age" name="age" min="0" max="120" placeholder="Enter your age">
+            </div>
+            
+            <div>
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender">
+                    <option value="">Select...</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <div>
+                <label for="bio">Bio:</label>
+                <textarea id="bio" name="bio" rows="4" placeholder="Tell us about yourself"></textarea>
+            </div>
+            
+            <div>
+                <input type="checkbox" id="newsletter" name="newsletter" value="yes">
+                <label for="newsletter">Subscribe to newsletter</label>
+            </div>
+            
+            <div>
+                <input type="radio" id="contact-email" name="contact-method" value="email">
+                <label for="contact-email">Contact by email</label>
+                
+                <input type="radio" id="contact-phone" name="contact-method" value="phone">
+                <label for="contact-phone">Contact by phone</label>
+            </div>
+            
+            <div>
+                <input type="file" id="avatar" name="avatar" accept="image/*">
+                <label for="avatar">Upload avatar</label>
+            </div>
+            
+            <div>
+                <button type="submit" id="submit-btn">Submit Form</button>
+                <button type="reset" id="reset-btn">Reset Form</button>
+                <button type="button" id="cancel-btn">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="section">
+        <h2>Interactive Elements</h2>
+        <button id="action-btn" onclick="performAction()">Perform Action</button>
+        <button id="toggle-btn" onclick="toggleVisibility()">Toggle Section</button>
+        <button id="count-btn" onclick="incrementCounter()">Count: <span id="counter">0</span></button>
+    </div>
+
+    <div class="section" id="toggleable-section">
+        <h2>Data Table</h2>
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>John Doe</td>
+                    <td>Active</td>
+                    <td>
+                        <button onclick="editUser(1)">Edit</button>
+                        <button onclick="deleteUser(1)">Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Jane Smith</td>
+                    <td>Inactive</td>
+                    <td>
+                        <button onclick="editUser(2)">Edit</button>
+                        <button onclick="deleteUser(2)">Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Bob Johnson</td>
+                    <td>Pending</td>
+                    <td>
+                        <button onclick="editUser(3)">Edit</button>
+                        <button onclick="deleteUser(3)">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Lists and Content</h2>
+        <h3>Features</h3>
+        <ul id="features-list">
+            <li>Semantic HTML extraction</li>
+            <li>Web Worker support</li>
+            <li>Cross-browser compatibility</li>
+            <li>TypeScript support</li>
+        </ul>
+        
+        <h3>Steps</h3>
+        <ol id="steps-list">
+            <li>Initialize the library</li>
+            <li>Configure extraction options</li>
+            <li>Process the DOM</li>
+            <li>Handle the results</li>
+        </ol>
+    </div>
+
+    <div class="section hidden" id="hidden-content">
+        <h2>Hidden Content</h2>
+        <p>This content is hidden by default and should not be extracted unless specifically requested.</p>
+        <button id="hidden-btn">Hidden Button</button>
+    </div>
+
+    <div class="section">
+        <h2>Nested Structure</h2>
+        <div class="nested-container">
+            <div class="nested-item">
+                <h4>Item 1</h4>
+                <p>Description for item 1</p>
+                <button onclick="selectItem(1)">Select Item 1</button>
+            </div>
+            <div class="nested-item">
+                <h4>Item 2</h4>
+                <p>Description for item 2</p>
+                <button onclick="selectItem(2)">Select Item 2</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="dynamic-content" style="display: none;">
+        <h3>Dynamic Content</h3>
+        <p>This content was added after page load.</p>
+    </div>
+
+    <script>
+        let counter = 0;
+        
+        function performAction() {
+            console.log('Action performed');
+            alert('Action completed!');
+        }
+        
+        function toggleVisibility() {
+            const section = document.getElementById('toggleable-section');
+            section.style.display = section.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        function incrementCounter() {
+            counter++;
+            document.getElementById('counter').textContent = counter;
+        }
+        
+        function editUser(id) {
+            console.log('Editing user:', id);
+        }
+        
+        function deleteUser(id) {
+            console.log('Deleting user:', id);
+        }
+        
+        function selectItem(id) {
+            console.log('Selected item:', id);
+        }
+        
+        // Add dynamic content after page load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('dynamic-content').style.display = 'block';
+        });
+        
+        // Mock Ariadne for testing - this will be replaced by the real implementation
+        window.AriadneTest = {
+            createAriadne: async function(config = {}) {
+                // This will be replaced by actual Ariadne import in tests
+                return {
+                    extract: async function(doc) {
+                        return {
+                            title: doc.title,
+                            headings: Array.from(doc.querySelectorAll('h1, h2, h3, h4, h5, h6')).map(h => h.textContent),
+                            links: Array.from(doc.querySelectorAll('a')).map(a => ({
+                                text: a.textContent,
+                                href: a.getAttribute('href')
+                            })),
+                            forms: Array.from(doc.querySelectorAll('form')).map(form => ({
+                                action: form.getAttribute('action'),
+                                method: form.getAttribute('method'),
+                                inputs: Array.from(form.querySelectorAll('input, select, textarea')).map(input => ({
+                                    name: input.getAttribute('name'),
+                                    type: input.type,
+                                    required: input.hasAttribute('required'),
+                                    placeholder: input.getAttribute('placeholder')
+                                }))
+                            })),
+                            buttons: Array.from(doc.querySelectorAll('button, input[type="submit"], input[type="button"], input[type="reset"]')).map(btn => ({
+                                text: btn.textContent || btn.value,
+                                type: btn.type
+                            })),
+                            tables: Array.from(doc.querySelectorAll('table')).map(table => ({
+                                headers: Array.from(table.querySelectorAll('th')).map(th => th.textContent),
+                                rows: Array.from(table.querySelectorAll('tbody tr')).map(row => 
+                                    Array.from(row.querySelectorAll('td')).map(td => td.textContent)
+                                )
+                            })),
+                            lists: Array.from(doc.querySelectorAll('ul, ol')).map(list => ({
+                                type: list.tagName.toLowerCase(),
+                                items: Array.from(list.querySelectorAll('li')).map(li => li.textContent)
+                            }))
+                        };
+                    },
+                    cleanup: function() {
+                        return true;
+                    }
+                };
+            }
+        };
+    </script>
+</body>
+</html>

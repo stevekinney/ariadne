@@ -4,6 +4,7 @@
  */
 
 import { describe, expect, it } from 'bun:test';
+import './test-setup.js'; // Import DOM setup before other imports
 
 import {
   Ariadne,
@@ -66,16 +67,11 @@ describe('Ariadne API Integration Tests', () => {
 
   describe('Document Validation', () => {
     it('should validate proper Document objects', () => {
-      // Skip this test in Node.js environment since Document is not available
-      if (typeof Document === 'undefined') {
-        console.warn('⚠️  Skipping Document validation test in Node.js environment');
-        return;
-      }
+      // Create a real document using happy-dom
+      const doc = document.implementation.createHTMLDocument('Test Document');
+      doc.body.innerHTML = '<h1>Test</h1>';
 
-      const mockDoc = {
-        documentElement: { tagName: 'HTML' },
-        location: { href: 'https://example.com' },
-      } as unknown as Document;
+      const mockDoc = doc;
 
       expect(() => {
         DocumentSchema.parse(mockDoc);

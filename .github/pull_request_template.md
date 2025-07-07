@@ -1,6 +1,6 @@
 ## Description
 
-Brief description of the changes in this PR.
+<!-- Brief description of the changes in this pull request. -->
 
 ## Type of Change
 
@@ -13,7 +13,7 @@ Brief description of the changes in this PR.
 
 ## Related Issue
 
-Fixes #(issue number)
+<!-- Fixes #(issue number) -->
 
 ## Checklist
 
@@ -26,10 +26,10 @@ Fixes #(issue number)
 - [ ] New and existing unit tests pass locally with my changes
 - [ ] Any dependent changes have been merged and published
 
-## Screenshots (if applicable)
+## Screenshots
 
-Add screenshots to help explain your changes.
+<!-- Add screenshots to help explain your changes. -->
 
 ## Additional Notes
 
-Any additional information or context about the PR.
+<!-- Any additional information or context about the pull requests. -->

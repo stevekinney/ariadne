@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Form Test - Ariadne</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        form {
+            background: #f5f5f5;
+            padding: 2rem;
+            border-radius: 8px;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 0.75rem 1.5rem;
+            margin-right: 0.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button[type="submit"] {
+            background: #007bff;
+            color: white;
+        }
+        button[type="reset"] {
+            background: #6c757d;
+            color: white;
+        }
+        #output {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #e8f4f8;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simple Form Test</h1>
+    
+    <form id="test-form" action="/submit" method="POST">
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" min="1" max="120">
+        </div>
+        
+        <div class="form-group">
+            <label for="country">Country:</label>
+            <select id="country" name="country">
+                <option value="">Select a country</option>
+                <option value="us">United States</option>
+                <option value="uk">United Kingdom</option>
+                <option value="ca">Canada</option>
+                <option value="au">Australia</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="bio">Bio:</label>
+            <textarea id="bio" name="bio" rows="4"></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="newsletter" value="yes">
+                Subscribe to newsletter
+            </label>
+        </div>
+        
+        <div class="form-group">
+            <p>Preferred contact method:</p>
+            <label>
+                <input type="radio" name="contact" value="email">
+                Email
+            </label>
+            <label>
+                <input type="radio" name="contact" value="phone">
+                Phone
+            </label>
+        </div>
+        
+        <button type="submit">Submit</button>
+        <button type="reset">Reset</button>
+    </form>
+    
+    <div id="output"></div>
+    
+    <script type="module">
+        import { extractSemanticMap } from '/dist/index.js';
+        
+        async function runTest() {
+            const output = document.getElementById('output');
+            output.textContent = 'Running Ariadne extraction...\\n';
+            
+            try {
+                const result = await extractSemanticMap(document, {
+                    tokenBudget: 5000,
+                    debug: true
+                });
+                
+                output.textContent += '\\nExtraction successful!\\n\\n';
+                output.textContent += JSON.stringify(result, null, 2);
+                
+                // Store result for Playwright tests
+                window.ariadneResult = result;
+                
+            } catch (error) {
+                output.textContent += '\\nExtraction failed!\\n\\n';
+                output.textContent += error.message + '\\n';
+                output.textContent += error.stack || '';
+                
+                // Store error for Playwright tests
+                window.ariadneError = error;
+            }
+        }
+        
+        // Run test on load
+        window.addEventListener('load', runTest);
+        
+        // Prevent actual form submission
+        document.getElementById('test-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            console.log('Form submission prevented');
+        });
+    </script>
+</body>
+</html>

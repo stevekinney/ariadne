@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'bun:test';
+import './test-setup.js'; // Import DOM setup before other imports
 import { Ariadne, extractSemanticMap } from './index.js';
 import type { AriadneConfiguration } from './types/ariadne.js';
 import { HashIdGenerator } from './worker/hash-id-generator.js';
@@ -175,18 +176,7 @@ describe('New Ariadne Features', () => {
 
 // Helper function to create a test document
 function createTestDocument(): Document {
-  if (typeof document === 'undefined') {
-    // Mock document for Node.js environment
-    return {
-      documentElement: { tagName: 'HTML' },
-      location: { href: 'http://test.example.com' },
-      body: {},
-      createElement: () => ({}),
-      querySelectorAll: () => [],
-    } as any;
-  }
-
-  // Create a real document fragment for browser environment
+  // Create a test document with happy-dom
   const doc = document.implementation.createHTMLDocument('Test');
   doc.body.innerHTML = `
     <form id="test-form">
@@ -197,6 +187,21 @@ function createTestDocument(): Document {
     <a href="/test">Test Link</a>
     <h1>Test Heading</h1>
   `;
+  
+  // Ensure the document has the required properties for validation
+  if (!doc.location) {
+    (doc as any).location = {
+      href: 'http://localhost/test',
+      origin: 'http://localhost',
+      protocol: 'http:',
+      host: 'localhost',
+      hostname: 'localhost',
+      port: '',
+      pathname: '/test',
+      search: '',
+      hash: ''
+    };
+  }
   
   return doc;
 }
