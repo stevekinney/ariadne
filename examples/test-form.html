@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration Form</title>
+</head>
+<body>
+    <header>
+        <h1>Create Your Account</h1>
+        <p>Join our community today</p>
+    </header>
+
+    <main>
+        <form id="registration-form" action="/register" method="POST">
+            <fieldset>
+                <legend>Personal Information</legend>
+                
+                <div class="form-group">
+                    <label for="first-name">First Name:</label>
+                    <input type="text" id="first-name" name="firstName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="last-name">Last Name:</label>
+                    <input type="text" id="last-name" name="lastName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address:</label>
+                    <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number:</label>
+                    <input type="tel" id="phone" name="phone" aria-label="Contact phone number">
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Account Security</legend>
+                
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password:</label>
+                    <input type="password" id="confirm-password" name="confirmPassword" required>
+                </div>
+            </fieldset>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="newsletter" value="yes">
+                    Subscribe to our newsletter
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="terms" value="accepted" required>
+                    I agree to the <a href="/terms">Terms and Conditions</a>
+                </label>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit">Create Account</button>
+                <button type="reset">Clear Form</button>
+            </div>
+        </form>
+
+        <section>
+            <h2>Pricing Plans</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Plan</th>
+                        <th>Price</th>
+                        <th>Features</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Basic</td>
+                        <td>$9.99/month</td>
+                        <td>10 projects, 1 GB storage</td>
+                        <td><a href="/subscribe/basic">Choose Basic</a></td>
+                    </tr>
+                    <tr>
+                        <td>Pro</td>
+                        <td>$19.99/month</td>
+                        <td>Unlimited projects, 10 GB storage</td>
+                        <td><a href="/subscribe/pro">Choose Pro</a></td>
+                    </tr>
+                    <tr>
+                        <td>Enterprise</td>
+                        <td>Contact us</td>
+                        <td>Custom features, unlimited storage</td>
+                        <td><a href="/contact-sales">Contact Sales</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <nav>
+            <a href="/home">Home</a>
+            <a href="/about">About</a>
+            <a href="/contact">Contact</a>
+            <a href="/privacy">Privacy Policy</a>
+        </nav>
+        <p>&copy; 2025 Example Company. All rights reserved.</p>
+    </footer>
+</body>
+</html>

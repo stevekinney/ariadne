@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ariadne Build Test</title>
+</head>
+<body>
+  <h1>Ariadne Build Test</h1>
+  
+  <form id="test-form">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" placeholder="Enter your name">
+    
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" placeholder="your@email.com">
+    
+    <button type="submit">Submit</button>
+  </form>
+
+  <div id="output">
+    <h2>Results will appear here</h2>
+  </div>
+
+  <script type="module">
+    // Import from the built files
+    import { extractSemanticMap } from '../dist/index.js';
+    
+    async function testAriadne() {
+      try {
+        console.log('Testing Ariadne build...');
+        
+        const result = await extractSemanticMap(document, {
+          tokenBudget: 5000,
+          debug: true
+        });
+        
+        console.log('Extraction successful:', result);
+        
+        // Display results
+        const output = document.getElementById('output');
+        output.innerHTML = `
+          <h2>Extraction Successful!</h2>
+          <pre>${JSON.stringify(result, null, 2)}</pre>
+        `;
+        
+      } catch (error) {
+        console.error('Extraction failed:', error);
+        document.getElementById('output').innerHTML = `
+          <h2>Error!</h2>
+          <pre>${error.message}</pre>
+        `;
+      }
+    }
+    
+    // Run test when page loads
+    window.addEventListener('load', testAriadne);
+  </script>
+</body>
+</html>
