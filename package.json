@@ -63,7 +63,7 @@
     "eslint-plugin-promise": "^7.2.1",
     "eslint-plugin-unicorn": "^59.0.1",
     "eslint-plugin-unused-imports": "^4.1.4",
-    "globals": "^16.1.0",
+    "globals": "^17.3.0",
     "happy-dom": "^18.0.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.0.0",
